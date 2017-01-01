@@ -1,6 +1,7 @@
 [package]
 name = "raytracer"
 version = "0.1.0"
-authors = ["Alexander Ershov <aershov182@yandex-team.ru>"]
+authors = ["Alexander Ershov <vohsrea@gmail.com>"]
 
 [dependencies]
+bmp = "0.2.0"
