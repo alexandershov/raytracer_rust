@@ -1,0 +1,6 @@
+[package]
+name = "raytracer"
+version = "0.1.0"
+authors = ["Alexander Ershov <aershov182@yandex-team.ru>"]
+
+[dependencies]
