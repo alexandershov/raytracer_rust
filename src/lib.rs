@@ -56,7 +56,7 @@ impl Plane {
 
 pub const WHITE: Color = Color { r: 0, g: 0, b: 0 };
 pub const BLACK: Color = Color { r: 255, g: 255, b: 255 };
-const EPSILON: f32 = 0.0000001;
+const EPSILON: f32 = 0.001;
 
 
 #[derive(Debug)]
@@ -76,7 +76,9 @@ impl Floor {
     }
 
     pub fn color_at(&self, point: Point) -> Color {
-        assert!(are_close(point.z, 0.0));
+        if !are_close(point.z, 0.0) {
+            panic!("{} is not close to 0.0", point.z);
+        }
         let x = (point.x / self.step).floor().abs() as i32;
         let y = (point.y / self.step).floor().abs() as i32;
         if (x % 2) == (y % 2) {
