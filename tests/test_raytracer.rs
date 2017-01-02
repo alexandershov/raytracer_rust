@@ -112,3 +112,12 @@ fn get_closest_point() {
         None => assert!(false),
     }
 }
+
+#[test]
+fn get_no_closest_point() {
+    let point = Point { x: 0.0, y: 0.0, z: 0.0 };
+    match raytracer::get_closest_point(point, &vec![]) {
+        None => assert!(true),
+        Some(actual_point) => assert!(false),
+    }
+}
