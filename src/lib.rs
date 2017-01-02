@@ -127,3 +127,7 @@ pub fn get_brightness(distance_to_light: f32) -> f32 {
     1000.0 / distance_to_light
 }
 
+pub fn are_close_points(a: Point, b: Point) -> bool {
+    are_close(a.x, b.x) & are_close(a.y, b.y) & are_close(a.z, b.z)
+}
+

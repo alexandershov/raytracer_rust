@@ -67,13 +67,13 @@ fn intensify_very_bright() {
 #[test]
 fn ray_sphere_intersection() {
     let ray = Ray::new(
-        Point { x: -1.0, y: -1.0, z: -1.0 },
-        Point { x: 1.0, y: 1.0, z: 1.0 });
+        Point { x: 0.0, y: 0.0, z: 0.0 },
+        Point { x: 1.0, y: 0.0, z: 0.0 });
     let sphere = raytracer::Sphere {
-        center: Point { x: 10.0, y: 10.0, z: 10.0},
-        radius: 2.0,
+        center: Point { x: 0.0, y: 0.0, z: 0.0},
+        radius: 1.0,
     };
     let points = sphere.get_intersections(ray);
     assert_eq!(1, points.len());
-    assert_eq!(points[0], Point { x: 3.0, y: 0.0, z: 0.0})
+    assert!(raytracer::are_close_points(points[0], Point { x: 1.0, y: 0.0, z: 0.0}));
 }
