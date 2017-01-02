@@ -30,7 +30,22 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn get_intersections(&self, ray: Ray) -> Vec<Point> {
-        vec![Point { x: 0.0, y: 0.0, z: 0.0}]
+        let a = ray.direction.x.powi(2) + ray.direction.y.powi(2) + ray.direction.z.powi(2);
+        let b = 2.0 * (ray.start.x * ray.direction.x + ray.start.y * ray.direction.y + ray.start.z * ray.direction.z);
+        let c = ray.start.x.powi(2) + ray.start.y.powi(2) + ray.start.z.powi(2) - self.radius.powi(2);
+        let roots = get_quadratic_equation_roots(a, b, c);
+        let mut points = vec![];
+        for root in roots {
+            if root >= 0.0 {
+                let point = Point {
+                    x: ray.start.x + root * ray.direction.x,
+                    y: ray.start.y + root * ray.direction.y,
+                    z: ray.start.z + root * ray.direction.z,
+                };
+                points.push(point)
+            }
+        }
+        return points;
     }
 }
 

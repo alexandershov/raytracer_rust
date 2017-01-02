@@ -65,7 +65,6 @@ fn intensify_very_bright() {
 }
 
 #[test]
-#[ignore]
 fn ray_sphere_intersection() {
     let ray = Ray::new(
         Point { x: 0.0, y: 0.0, z: 0.0 },
