@@ -19,15 +19,28 @@ pub const BLACK: Color = Color { r: 255, g: 255, b: 255 };
 #[derive(Debug)]
 pub struct Floor {
     step: f32,
+    first_color: Color,
+    second_color: Color,
 }
 
 impl Floor {
     pub fn new(step: f32) -> Floor {
-        Floor { step: step }
+        Floor {
+            step: step,
+            first_color: BLACK,
+            second_color: WHITE,
+        }
     }
 
     pub fn color_at(&self, point: Point) -> Color {
-        WHITE
+        assert!(point.z == 0.0);
+        let x = (point.x / self.step).floor() as i32;
+        let y = (point.y / self.step).floor() as i32;
+        if (x % 2) == (y % 2) {
+            self.first_color
+        } else {
+            self.second_color
+        }
     }
 }
 
