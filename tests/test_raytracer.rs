@@ -65,6 +65,7 @@ fn intensify_very_bright() {
 }
 
 #[test]
+#[ignore]
 fn ray_sphere_intersection() {
     let ray = Ray::new(
         Point { x: 0.0, y: 0.0, z: 0.0 },
@@ -76,4 +77,10 @@ fn ray_sphere_intersection() {
     let points = sphere.get_intersections(ray);
     assert_eq!(1, points.len());
     assert!(raytracer::are_close_points(points[0], Point { x: 1.0, y: 0.0, z: 0.0}));
+}
+
+#[test]
+fn quadratic_equation() {
+    let solutions = raytracer::get_quadratic_equation_roots(1.0, 2.0, 1.0);
+    assert_eq!(solutions, vec![-1.0, -1.0]);
 }

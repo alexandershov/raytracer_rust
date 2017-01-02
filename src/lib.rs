@@ -131,3 +131,11 @@ pub fn are_close_points(a: Point, b: Point) -> bool {
     are_close(a.x, b.x) & are_close(a.y, b.y) & are_close(a.z, b.z)
 }
 
+pub fn get_quadratic_equation_roots(a: f32, b: f32, c: f32) -> Vec<f32> {
+    let d = b * b - 4.0 * a * c;
+    let d_sqrt = d.sqrt();
+    let mut result = vec![];
+    result.push((-b + d_sqrt) / (2.0 * a));
+    result.push((-b - d_sqrt) / (2.0 * a));
+    result
+}
