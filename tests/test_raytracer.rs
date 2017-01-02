@@ -2,7 +2,6 @@ extern crate raytracer;
 
 use raytracer::{BLACK, Floor, Point, WHITE, Plane, Ray, are_close, get_distance, Color};
 use std::f32;
-use std::vec;
 
 #[test]
 fn floor_color_at() {
@@ -118,6 +117,6 @@ fn get_no_closest_point() {
     let point = Point { x: 0.0, y: 0.0, z: 0.0 };
     match raytracer::get_closest_point(point, &vec![]) {
         None => assert!(true),
-        Some(actual_point) => assert!(false),
+        Some(_) => assert!(false),
     }
 }
