@@ -1,11 +1,11 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
     pub z: f32,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Color {
     pub r: u8,
     pub g: u8,
@@ -17,11 +17,13 @@ const BLACK: Color = Color { r: 255, g: 255, b: 255 };
 
 
 #[derive(Debug)]
-pub struct Floor {}
+pub struct Floor {
+    step: f32,
+}
 
 impl Floor {
-    pub fn new() -> Floor {
-        Floor {}
+    pub fn new(step: f32) -> Floor {
+        Floor { step: step }
     }
 
     pub fn color_at(&self, point: Point) -> Color {
