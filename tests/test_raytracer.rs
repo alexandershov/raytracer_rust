@@ -1,6 +1,7 @@
 extern crate raytracer;
 
-use raytracer::{BLACK, Floor, Point, WHITE, Plane, Ray};
+use raytracer::{BLACK, Floor, Point, WHITE, Plane, Ray, are_close, get_distance};
+use std::f32;
 
 #[test]
 fn floor_color_at() {
@@ -36,4 +37,12 @@ fn ray_plane_no_intersection() {
     let plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let points = plane.get_intersections(ray);
     assert_eq!(0, points.len());
+}
+
+#[test]
+fn distance() {
+    let origin = Point { x: 0.0, y: 0.0, z: 0.0 };
+    let point = Point {x: 1.0, y: 3.0, z: 5.0};
+    let distance = get_distance(origin, point);
+    assert!(are_close(distance, (35.0 as f32).sqrt()));
 }

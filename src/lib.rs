@@ -87,8 +87,13 @@ impl Floor {
     }
 }
 
-fn are_close(a: f32, b: f32) -> bool {
+pub fn are_close(a: f32, b: f32) -> bool {
     (a - b).abs() < EPSILON
+}
+
+pub fn get_distance(a: Point, b: Point) -> f32 {
+    let sum = (b.z - a.z).powi(2) + (b.y - a.y).powi(2) + (b.x - a.x).powi(2);
+    sum.sqrt()
 }
 
 pub fn add(x: u32, y: u32) -> u32 {
