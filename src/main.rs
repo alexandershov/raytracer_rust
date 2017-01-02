@@ -6,9 +6,9 @@ use raytracer::{Floor, Color, Point, Plane, Ray};
 
 
 fn main() {
-    let size = 200;
+    let size = 800;
     let mut image = Image::new(size, size);
-    let floor = Floor::new(16.0);
+    let floor = Floor::new(32.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let eye = Point {
         x: (size / 2) as f32,
@@ -35,7 +35,7 @@ fn main() {
             image.set_pixel(size - y - 1, size - z - 1, color_to_pixel(color));
         }
     }
-    image.save("/Users/aershov182/tmp/raytracer.bmp").expect("oops");
+    image.save("/Users/aershov182/tmp/raytracer.bmp").expect("couldn't save image");
 }
 
 
