@@ -12,6 +12,35 @@ pub struct Color {
     pub b: u8,
 }
 
+pub struct Ray {
+    start: Point,
+    direction: Point,
+}
+
+impl Ray {
+    pub fn new(start: Point, direction: Point) -> Ray {
+        Ray { start: start, direction: direction }
+    }
+}
+
+pub struct Plane {
+    a: f32,
+    b: f32,
+    c: f32,
+    d: f32,
+}
+
+impl Plane {
+    pub fn new(a: f32, b: f32, c: f32, d: f32) -> Plane {
+        Plane { a: a, b: b, c: c, d: d }
+    }
+
+    pub fn get_intersections(&self, ray: Ray) -> Vec<Point> {
+        let result = vec![Point { x: 0.0, y: 0.0, z: 0.0 }];
+        return result;
+    }
+}
+
 pub const WHITE: Color = Color { r: 0, g: 0, b: 0 };
 pub const BLACK: Color = Color { r: 255, g: 255, b: 255 };
 
