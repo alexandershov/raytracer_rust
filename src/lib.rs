@@ -100,9 +100,15 @@ pub fn get_distance(a: Point, b: Point) -> f32 {
 
 pub fn intensify(color: Color, brightness: f32) -> Color {
     Color {
-        r: ((color.r as f32) * brightness) as u8,
-        g: ((color.g as f32) * brightness) as u8,
-        b: ((color.b as f32) * brightness) as u8,
+        r: mul_color_component(color.r, brightness),
+        g: mul_color_component(color.g, brightness),
+        b: mul_color_component(color.b, brightness),
     }
+}
+
+
+fn mul_color_component(c: u8, brightness: f32) -> u8 {
+    let r = ((c as f32) * brightness).min(255.0);
+    r as u8
 }
 

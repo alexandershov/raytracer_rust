@@ -54,3 +54,12 @@ fn intensify() {
     let expected = Color { r: 200, g: 202, b: 204 };
     assert_eq!(intensified, expected);
 }
+
+
+#[test]
+fn intensify_very_bright() {
+    let color = Color { r: 100, g: 101, b: 102};
+    let intensified = raytracer::intensify(color, 3.0);
+    let expected = Color { r: 255, g: 255, b: 255 };
+    assert_eq!(intensified, expected);
+}
