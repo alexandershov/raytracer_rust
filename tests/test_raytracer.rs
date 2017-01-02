@@ -19,9 +19,21 @@ fn floor_color_at() {
 #[test]
 fn ray_plane_intersection() {
     let ray = Ray::new(
-        Point { x: 1.0, y: 1.0, z: 1.0 },
-        Point { x: 0.0, y: 0.0, z: 0.0 });
+        Point { x: -1.0, y: -1.0, z: -1.0 },
+        Point { x: 1.0, y: 1.0, z: 1.0 });
     let plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let points = plane.get_intersections(ray);
     assert_eq!(1, points.len());
+    assert_eq!(points[0], Point { x: 0.0, y: 0.0, z: 0.0})
+}
+
+
+#[test]
+fn ray_plane_no_intersection() {
+    let ray = Ray::new(
+        Point { x: 1.0, y: 1.0, z: 1.0 },
+        Point { x: 1.0, y: 1.0, z: 1.0 });
+    let plane = Plane::new(0.0, 0.0, 1.0, 0.0);
+    let points = plane.get_intersections(ray);
+    assert_eq!(0, points.len());
 }
