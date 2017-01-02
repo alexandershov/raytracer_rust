@@ -24,11 +24,11 @@ fn main() {
     };
     let sphere = raytracer::Sphere {
         center: Point {
-            x: -900.0,
-            y: (size / 2) as f32,
-            z: 380.0,
+            x: -500.0,
+            y: (size / 3) as f32,
+            z: 80.0,
         },
-        radius: 380.0,
+        radius: 80.0,
     };
     let floor = Floor::new(32.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
@@ -65,7 +65,7 @@ fn main() {
                 let distance_to_light;
                 let points_to_light = get_colored_points(&floor, &floor_plane, &sphere, ray_to_light, true);
                 if points_to_light.len() != 0 {
-                    distance_to_light = 100000000.0;
+                    distance_to_light = raytracer::get_distance(point, light_source) * 3.0;
                 } else {
                     distance_to_light = raytracer::get_distance(point, light_source);
                 }
