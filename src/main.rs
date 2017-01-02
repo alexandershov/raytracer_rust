@@ -9,7 +9,7 @@ fn main() {
     let size = 800;
     let mut image = Image::new(size, size);
     let light_source = Point {
-        x: -80.0,
+        x: -1000.0,
         y: (size / 2) as f32,
         z: (size / 2) as f32,
     };
