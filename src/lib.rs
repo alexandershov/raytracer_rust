@@ -39,9 +39,9 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn get_intersections(&self, ray: Ray) -> Vec<Point> {
-        let x0 = ray.start.x + self.center.x;
-        let y0 = ray.start.y + self.center.y;
-        let z0 = ray.start.z + self.center.z;
+        let x0 = ray.start.x - self.center.x;
+        let y0 = ray.start.y - self.center.y;
+        let z0 = ray.start.z - self.center.z;
         let a = ray.direction.x.powi(2) + ray.direction.y.powi(2) + ray.direction.z.powi(2);
         let b = 2.0 * (x0 * ray.direction.x + y0 * ray.direction.y + z0 * ray.direction.z);
         let c = x0.powi(2) + y0.powi(2) + z0.powi(2) - self.radius.powi(2);

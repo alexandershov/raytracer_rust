@@ -5,6 +5,15 @@ use bmp::{Image, Pixel};
 use raytracer::{Floor, Color, Point, Plane, Ray};
 
 
+struct ColoredPoint {
+    point: Point,
+    color: Color,
+}
+
+const SPHERE_COLOR: Color = Color { r: 0, g: 180, b: 0};
+
+
+
 fn main() {
     let size = 800;
     let mut image = Image::new(size, size);
@@ -17,7 +26,7 @@ fn main() {
         center: Point {
             x: -500.0,
             y: (size / 2) as f32,
-            z: 50.0,
+            z: 30.0,
         },
         radius: 30.0,
     };
@@ -38,15 +47,13 @@ fn main() {
                     z: (z as f32) - eye.z,
                 },
             };
-            let mut points = floor_plane.get_intersections(ray);
-            let mut sphere_points = sphere.get_intersections(ray);
-            points.append(&mut sphere_points);
             let color;
-            if points.len() == 0 {
+            let colored_points = get_colored_points(&floor, &floor_plane, &sphere, ray);
+            if colored_points.len() == 0 {
                 color = Color { r: 0, g: 0, b: 180 }
             } else {
-                let point = raytracer::get_closest_point(eye, &points).unwrap();
-                let simple_color = floor.color_at(point);
+                let point = colored_points[0].point;
+                let simple_color = colored_points[0].color;
                 let distance_to_light = raytracer::get_distance(point, light_source);
                 color = raytracer::intensify(simple_color, raytracer::get_brightness(distance_to_light));
             }
@@ -54,6 +61,32 @@ fn main() {
         }
     }
     image.save("/Users/aershov182/tmp/raytracer.bmp").expect("couldn't save image");
+}
+
+fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sphere, ray: Ray) -> Vec<ColoredPoint> {
+    let floor_points = floor_plane.get_intersections(ray);
+    let sphere_points = sphere.get_intersections(ray);
+    let mut colored_points = vec![];
+    match raytracer::get_closest_point(ray.start, &floor_points) {
+        Some(p) => {
+            let point = ColoredPoint {point: p, color: floor.color_at(p)};
+            colored_points.push(point);
+        },
+        _ => (),
+    }
+    match raytracer::get_closest_point(ray.start, &sphere_points) {
+        Some(p) => {
+            let point = ColoredPoint {point: p, color: SPHERE_COLOR};
+            if colored_points.len() != 0 {
+                if raytracer::get_distance(p, ray.start) < raytracer::get_distance(colored_points[0].point, ray.start) {
+                    colored_points.pop();
+                    colored_points.push(point)
+                }
+            }
+        },
+        _ => (),
+    }
+    return colored_points;
 }
 
 
