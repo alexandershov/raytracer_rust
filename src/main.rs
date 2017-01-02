@@ -13,6 +13,14 @@ fn main() {
         y: (size / 2) as f32,
         z: (size / 2) as f32,
     };
+    let sphere = raytracer::Sphere {
+        center: Point {
+            x: -500.0,
+            y: (size / 2) as f32,
+            z: 50.0,
+        },
+        radius: 30.0,
+    };
     let floor = Floor::new(32.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let eye = Point {
@@ -25,7 +33,7 @@ fn main() {
             let ray = Ray {
                 start: eye,
                 direction: Point {
-                    x: (0 as f32) - eye.x,
+                    x: 0.0 - eye.x,
                     y: (y as f32) - eye.y,
                     z: (z as f32) - eye.z,
                 },

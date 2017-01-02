@@ -163,3 +163,13 @@ pub fn get_quadratic_equation_roots(a: f32, b: f32, c: f32) -> Vec<f32> {
     result.push((-b - d_sqrt) / (2.0 * a));
     result
 }
+
+pub fn get_closest_point(point: Point, points: &Vec<Point>) -> Option<Point> {
+    let mut clone = points.clone();
+    clone.sort_by(|a, b| (&get_distance(*a, point)).partial_cmp(&get_distance(*b, point)).unwrap());
+    if clone.len() == 0 {
+        None
+    } else {
+        Some(clone[0])
+    }
+}
