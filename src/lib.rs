@@ -23,6 +23,17 @@ impl Ray {
     }
 }
 
+pub struct Sphere {
+    pub center: Point,
+    pub radius: f32,
+}
+
+impl Sphere {
+    pub fn get_intersections(&self, ray: Ray) -> Vec<Point> {
+        vec![Point { x: 0.0, y: 0.0, z: 0.0}]
+    }
+}
+
 pub struct Plane {
     a: f32,
     b: f32,
