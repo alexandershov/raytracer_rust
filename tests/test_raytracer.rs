@@ -89,7 +89,6 @@ fn ray_sphere_no_intersection() {
         radius: 1.0,
     };
     let points = sphere.get_intersections(ray);
-    panic!("oops {}", points[0]);
     assert_eq!(0, points.len());
 }
 
