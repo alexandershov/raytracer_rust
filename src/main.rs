@@ -24,11 +24,11 @@ fn main() {
     };
     let sphere = raytracer::Sphere {
         center: Point {
-            x: -500.0,
+            x: -900.0,
             y: (size / 2) as f32,
-            z: 80.0,
+            z: 380.0,
         },
-        radius: 80.0,
+        radius: 380.0,
     };
     let floor = Floor::new(32.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
@@ -101,6 +101,8 @@ fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sp
                     colored_points.pop();
                     colored_points.push(point)
                 }
+            } else {
+                colored_points.push(point)
             }
         },
         _ => (),
