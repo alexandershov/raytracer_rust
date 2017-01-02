@@ -1,6 +1,6 @@
 extern crate raytracer;
 
-use raytracer::{BLACK, Floor, Point, WHITE, Plane, Ray, are_close, get_distance};
+use raytracer::{BLACK, Floor, Point, WHITE, Plane, Ray, are_close, get_distance, Color};
 use std::f32;
 
 #[test]
@@ -45,4 +45,12 @@ fn distance() {
     let point = Point {x: 1.0, y: 3.0, z: 5.0};
     let distance = get_distance(origin, point);
     assert!(are_close(distance, (35.0 as f32).sqrt()));
+}
+
+#[test]
+fn intensify() {
+    let color = Color { r: 100, g: 101, b: 102};
+    let intensified = raytracer::intensify(color, 2.0);
+    let expected = Color { r: 200, g: 202, b: 204 };
+    assert_eq!(intensified, expected);
 }

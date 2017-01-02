@@ -98,6 +98,11 @@ pub fn get_distance(a: Point, b: Point) -> f32 {
     sum.sqrt()
 }
 
-pub fn add(x: u32, y: u32) -> u32 {
-    return x + y;
+pub fn intensify(color: Color, brightness: f32) -> Color {
+    Color {
+        r: ((color.r as f32) * brightness) as u8,
+        g: ((color.g as f32) * brightness) as u8,
+        b: ((color.b as f32) * brightness) as u8,
+    }
 }
+
