@@ -30,7 +30,7 @@ fn main() {
         },
         radius: 80.0,
     };
-    let floor = Floor::new(32.0);
+    let floor = Floor::new(64.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let eye = Point {
         x: (size / 2) as f32,
