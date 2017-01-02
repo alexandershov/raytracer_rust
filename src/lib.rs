@@ -112,3 +112,7 @@ fn mul_color_component(c: u8, brightness: f32) -> u8 {
     r as u8
 }
 
+pub fn get_brightness(distance_to_light: f32) -> f32 {
+    distance_to_light / 1000.0
+}
+

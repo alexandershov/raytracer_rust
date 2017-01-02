@@ -8,6 +8,11 @@ use raytracer::{Floor, Color, Point, Plane, Ray};
 fn main() {
     let size = 800;
     let mut image = Image::new(size, size);
+    let light_source = Point {
+        x: -(size as i32 / 2) as f32,
+        y: (size / 2) as f32,
+        z: (size / 2) as f32,
+    };
     let floor = Floor::new(32.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let eye = Point {
@@ -30,7 +35,10 @@ fn main() {
             if points.len() == 0 {
                 color = Color { r: 0, g: 0, b: 180 }
             } else {
-                color = floor.color_at(points[0]);
+                let point = points[0];
+                color = floor.color_at(point);
+                let distance_to_light = raytracer::get_distance(point, light_source);
+                raytracer::intensify(color, raytracer::get_brightness(distance_to_light));
             }
             image.set_pixel(size - y - 1, size - z - 1, color_to_pixel(color));
         }
