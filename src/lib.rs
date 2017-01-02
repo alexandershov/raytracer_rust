@@ -13,8 +13,8 @@ pub struct Color {
 }
 
 pub struct Ray {
-    start: Point,
-    direction: Point,
+    pub start: Point,
+    pub direction: Point,
 }
 
 impl Ray {
