@@ -32,7 +32,7 @@ fn main() {
             } else {
                 color = floor.color_at(points[0]);
             }
-            image.set_pixel(y, z, color_to_pixel(color));
+            image.set_pixel(size - y - 1, size - z - 1, color_to_pixel(color));
         }
     }
     image.save("/Users/aershov182/tmp/raytracer.bmp").expect("oops");
