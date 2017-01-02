@@ -81,6 +81,8 @@ fn ray_sphere_intersection() {
 
 #[test]
 fn quadratic_equation() {
+    let solutions = raytracer::get_quadratic_equation_roots(0.0, 2.0, 4.0);
+    assert_eq!(solutions, vec![-2.0]);
     let solutions = raytracer::get_quadratic_equation_roots(1.0, 2.0, 1.0);
     assert_eq!(solutions, vec![-1.0, -1.0]);
     let solutions = raytracer::get_quadratic_equation_roots(8.0, 2.0, 1.0);

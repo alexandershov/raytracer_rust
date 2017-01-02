@@ -132,6 +132,12 @@ pub fn are_close_points(a: Point, b: Point) -> bool {
 }
 
 pub fn get_quadratic_equation_roots(a: f32, b: f32, c: f32) -> Vec<f32> {
+    if a == 0.0 {
+        if b == 0.0 {
+            panic!("not an equation");
+        }
+        return vec![-c / b];
+    }
     let d = b * b - 4.0 * a * c;
     if d < 0.0 {
         return vec![];
