@@ -48,7 +48,7 @@ fn main() {
                 },
             };
             let color;
-            let colored_points = get_colored_points(&floor, &floor_plane, &sphere, ray);
+            let colored_points = get_colored_points(&floor, &floor_plane, &sphere, ray, false);
             if colored_points.len() == 0 {
                 color = Color { r: 0, g: 0, b: 180 }
             } else {
@@ -63,14 +63,9 @@ fn main() {
                     },
                 };
                 let distance_to_light;
-                let points_to_light = get_colored_points(&floor, &floor_plane, &sphere, ray_to_light);
+                let points_to_light = get_colored_points(&floor, &floor_plane, &sphere, ray_to_light, true);
                 if points_to_light.len() != 0 {
-                    let first_point = points_to_light[0].point;
-                    if raytracer::are_close_points(first_point, point) {
-                        distance_to_light = raytracer::get_distance(point, light_source);
-                    } else {
-                        distance_to_light = 100000000.0;
-                    }
+                    distance_to_light = 100000000.0;
                 } else {
                     distance_to_light = raytracer::get_distance(point, light_source);
                 }
@@ -82,9 +77,14 @@ fn main() {
     image.save("/Users/aershov182/tmp/raytracer.bmp").expect("couldn't save image");
 }
 
-fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sphere, ray: Ray) -> Vec<ColoredPoint> {
-    let floor_points = floor_plane.get_intersections(ray);
-    let sphere_points = sphere.get_intersections(ray);
+fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sphere, ray: Ray,
+        exclude_ray_start: bool) -> Vec<ColoredPoint> {
+    let mut floor_points = floor_plane.get_intersections(ray);
+    let mut sphere_points = sphere.get_intersections(ray);
+    if exclude_ray_start {
+        floor_points = exclude_close_points(ray.start, &floor_points);
+        sphere_points = exclude_close_points(ray.start, &sphere_points);
+    }
     let mut colored_points = vec![];
     match raytracer::get_closest_point(ray.start, &floor_points) {
         Some(p) => {
@@ -106,6 +106,17 @@ fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sp
         _ => (),
     }
     return colored_points;
+}
+
+
+fn exclude_close_points(point: raytracer::Point, points: &Vec<raytracer::Point>) -> Vec<raytracer::Point> {
+    let mut result = vec![];
+    for item in points {
+        if !raytracer::are_close_points(point, *item) {
+            result.push(*item);
+        }
+    }
+    result
 }
 
 
