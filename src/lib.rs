@@ -20,6 +20,7 @@ pub struct Color {
     pub b: u8,
 }
 
+#[derive(Clone, Copy)]
 pub struct Ray {
     pub start: Point,
     pub direction: Point,

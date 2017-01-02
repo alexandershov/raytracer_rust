@@ -38,12 +38,14 @@ fn main() {
                     z: (z as f32) - eye.z,
                 },
             };
-            let points = floor_plane.get_intersections(ray);
+            let mut points = floor_plane.get_intersections(ray);
+            let mut sphere_points = sphere.get_intersections(ray);
+            points.append(&mut sphere_points);
             let color;
             if points.len() == 0 {
                 color = Color { r: 0, g: 0, b: 180 }
             } else {
-                let point = points[0];
+                let point = raytracer::get_closest_point(eye, &points).unwrap();
                 let simple_color = floor.color_at(point);
                 let distance_to_light = raytracer::get_distance(point, light_source);
                 color = raytracer::intensify(simple_color, raytracer::get_brightness(distance_to_light));
