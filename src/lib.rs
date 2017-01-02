@@ -36,13 +36,27 @@ impl Plane {
     }
 
     pub fn get_intersections(&self, ray: Ray) -> Vec<Point> {
-        let result = vec![Point { x: 0.0, y: 0.0, z: 0.0 }];
-        return result;
+        let mut result = vec![];
+        let denominator = self.a * ray.direction.x + self.b * ray.direction.y + self.c * ray.direction.z;
+        if !are_close(denominator, 0.0) {
+            let numerator = -(self.a * ray.start.x + self.b * ray.start.y + self.c * ray.start.z + self.d);
+            let k = numerator / denominator;
+            if k >= 0.0 {
+                let point = Point {
+                    x: ray.start.x + k * ray.direction.x,
+                    y: ray.start.y + k * ray.direction.y,
+                    z: ray.start.z + k * ray.direction.z,
+                };
+                result.push(point);
+            }
+        }
+        result
     }
 }
 
 pub const WHITE: Color = Color { r: 0, g: 0, b: 0 };
 pub const BLACK: Color = Color { r: 255, g: 255, b: 255 };
+const EPSILON: f32 = 0.0000001;
 
 
 #[derive(Debug)]
@@ -62,7 +76,7 @@ impl Floor {
     }
 
     pub fn color_at(&self, point: Point) -> Color {
-        assert!(point.z == 0.0);
+        assert!(are_close(point.z, 0.0));
         let x = (point.x / self.step).floor().abs() as i32;
         let y = (point.y / self.step).floor().abs() as i32;
         if (x % 2) == (y % 2) {
@@ -71,6 +85,10 @@ impl Floor {
             self.second_color
         }
     }
+}
+
+fn are_close(a: f32, b: f32) -> bool {
+    (a - b).abs() < EPSILON
 }
 
 pub fn add(x: u32, y: u32) -> u32 {
