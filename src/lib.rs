@@ -54,8 +54,8 @@ impl Plane {
     }
 }
 
-pub const WHITE: Color = Color { r: 50, g: 50, b: 50 };
-pub const BLACK: Color = Color { r: 200, g: 200, b: 200 };
+pub const WHITE: Color = Color { r: 200, g: 200, b: 200 };
+pub const BLACK: Color = Color { r: 50, g: 50, b: 50 };
 const EPSILON: f32 = 0.001;
 
 
@@ -113,6 +113,6 @@ fn mul_color_component(c: u8, brightness: f32) -> u8 {
 }
 
 pub fn get_brightness(distance_to_light: f32) -> f32 {
-    distance_to_light / 1000.0
+    1000.0 / distance_to_light
 }
 
