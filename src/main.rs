@@ -26,9 +26,9 @@ fn main() {
         center: Point {
             x: -500.0,
             y: (size / 2) as f32,
-            z: 30.0,
+            z: 80.0,
         },
-        radius: 30.0,
+        radius: 80.0,
     };
     let floor = Floor::new(32.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
@@ -54,7 +54,26 @@ fn main() {
             } else {
                 let point = colored_points[0].point;
                 let simple_color = colored_points[0].color;
-                let distance_to_light = raytracer::get_distance(point, light_source);
+                let ray_to_light = raytracer::Ray {
+                    start: point,
+                    direction: raytracer::Point {
+                        x: light_source.x - point.x,
+                        y: light_source.y - point.y,
+                        z: light_source.z - point.z,
+                    },
+                };
+                let distance_to_light;
+                let points_to_light = get_colored_points(&floor, &floor_plane, &sphere, ray_to_light);
+                if points_to_light.len() != 0 {
+                    let first_point = points_to_light[0].point;
+                    if raytracer::are_close_points(first_point, point) {
+                        distance_to_light = raytracer::get_distance(point, light_source);
+                    } else {
+                        distance_to_light = 100000000.0;
+                    }
+                } else {
+                    distance_to_light = raytracer::get_distance(point, light_source);
+                }
                 color = raytracer::intensify(simple_color, raytracer::get_brightness(distance_to_light));
             }
             image.set_pixel(size - y - 1, size - z - 1, color_to_pixel(color));
