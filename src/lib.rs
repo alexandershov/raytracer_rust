@@ -1,8 +1,16 @@
+use std::fmt;
+
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
     pub z: f32,
+}
+
+impl fmt::Display for Point {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Point(x={}, y={}, z={})", self.x, self.y, self.z)
+    }
 }
 
 #[derive(Debug, PartialEq, Clone, Copy)]
