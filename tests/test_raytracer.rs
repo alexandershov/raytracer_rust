@@ -3,6 +3,20 @@ extern crate raytracer;
 use raytracer::{BLACK, Floor, Point, WHITE, Plane, Ray, are_close, get_distance, Color};
 use std::f32;
 
+const COLOR_EPSILON: f32 = 1.0;
+
+
+macro_rules! assert_close_colors {
+    ($color_a:expr, $color_b:expr) => {{
+        assert!(distance_between_colors($color_a, $color_b) < COLOR_EPSILON);
+    }};
+
+    ($color_a:expr, $color_b:expr, $epsilon:expr) => {{
+        assert!(distance_between_colors($color_a, $color_b) < $epsilon);
+    }};
+}
+
+
 #[test]
 fn floor_color_at() {
     let floor = Floor::new(5.0);
@@ -132,12 +146,22 @@ fn pixel_color() {
         radius: 10.0,
         color: green,
     };
+    let sky = raytracer::Color { r: 0, g: 0, b: 180 };
     let scene = raytracer::Scene {
         floor: raytracer::Floor::new(32.0),
         light: raytracer::Point::new(-200.0, 10.0, 200.0),
+        sky: sky,
         spheres: vec![sphere],
         eye: Point::new(30.0, 30.0, 30.0),
         width: 256,
         height: 256,
     };
+    assert_close_colors!(scene.color_at(256, 256), sky, 0.001);
 }
+
+fn distance_between_colors(first: Color, second: Color) -> f32 {
+    let sum_squares = ((first.r - second.r).pow(2) + (first.g - second.g).pow(2) + (first.b - second.b).pow(2)) as f32;
+    sum_squares.sqrt()
+}
+
+

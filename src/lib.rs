@@ -47,10 +47,17 @@ pub struct Sphere {
 pub struct Scene {
     pub floor: Floor,
     pub light: Point,
+    pub sky: Color,
     pub spheres: Vec<Sphere>,
     pub eye: Point,
     pub width: u32,
     pub height: u32,
+}
+
+impl Scene {
+    pub fn color_at(&self, y: u32, z: u32) -> Color {
+        Color { r: 0, g: 0, b: 180 }
+    }
 }
 
 impl Sphere {
