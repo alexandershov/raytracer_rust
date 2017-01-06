@@ -15,36 +15,36 @@ struct ColoredPoint {
 fn main() {
     let size = 800;
     let mut image = Image::new(size, size);
-    let light_source = Point {
-        x: -1000.0,
-        y: (size / 2) as f32,
-        z: (size / 2) as f32,
-    };
+    let light_source = Point::new(
+        -1000.0,
+        (size / 2) as f32,
+        (size / 2) as f32,
+    );
     let sphere = raytracer::Sphere {
-        center: Point {
-            x: -500.0,
-            y: (size / 3) as f32,
-            z: 80.0,
-        },
+        center: Point::new(
+            -500.0,
+            (size / 3) as f32,
+            80.0,
+        ),
         radius: 80.0,
         color: Color { r: 0, g: 180, b: 0 },
     };
     let floor = Floor::new(64.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
-    let eye = Point {
-        x: (size / 2) as f32,
-        y: (size / 2) as f32,
-        z: (size / 2) as f32
-    };
+    let eye = Point::new(
+        (size / 2) as f32,
+        (size / 2) as f32,
+        (size / 2) as f32
+    );
     for y in 0..size {
         for z in 0..size {
             let ray = Ray {
                 start: eye,
-                direction: Point {
-                    x: 0.0 - eye.x,
-                    y: (y as f32) - eye.y,
-                    z: (z as f32) - eye.z,
-                },
+                direction: Point::new(
+                    0.0 - eye.x,
+                    (y as f32) - eye.y,
+                    (z as f32) - eye.z,
+                ),
             };
             let color;
             let colored_points = get_colored_points(&floor, &floor_plane, &sphere, ray, false);
@@ -55,11 +55,11 @@ fn main() {
                 let simple_color = colored_points[0].color;
                 let ray_to_light = raytracer::Ray {
                     start: point,
-                    direction: raytracer::Point {
-                        x: light_source.x - point.x,
-                        y: light_source.y - point.y,
-                        z: light_source.z - point.z,
-                    },
+                    direction: raytracer::Point::new(
+                        light_source.x - point.x,
+                        light_source.y - point.y,
+                        light_source.z - point.z,
+                    ),
                 };
                 let distance_to_light;
                 let points_to_light = get_colored_points(&floor, &floor_plane, &sphere, ray_to_light, true);

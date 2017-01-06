@@ -7,6 +7,12 @@ pub struct Point {
     pub z: f32,
 }
 
+impl Point {
+    pub fn new(x: f32, y: f32, z: f32) -> Point {
+        Point { x: x, y: y, z: z}
+    }
+}
+
 impl fmt::Display for Point {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Point(x={}, y={}, z={})", self.x, self.y, self.z)
@@ -57,11 +63,11 @@ impl Sphere {
         let mut points = vec![];
         for root in roots {
             if root >= 0.0 {
-                let point = Point {
-                    x: ray.start.x + root * ray.direction.x,
-                    y: ray.start.y + root * ray.direction.y,
-                    z: ray.start.z + root * ray.direction.z,
-                };
+                let point = Point::new(
+                    ray.start.x + root * ray.direction.x,
+                    ray.start.y + root * ray.direction.y,
+                    ray.start.z + root * ray.direction.z,
+                );
                 points.push(point)
             }
         }
@@ -88,11 +94,11 @@ impl Plane {
             let numerator = -(self.a * ray.start.x + self.b * ray.start.y + self.c * ray.start.z + self.d);
             let k = numerator / denominator;
             if k >= 0.0 {
-                let point = Point {
-                    x: ray.start.x + k * ray.direction.x,
-                    y: ray.start.y + k * ray.direction.y,
-                    z: ray.start.z + k * ray.direction.z,
-                };
+                let point = Point::new(
+                    ray.start.x + k * ray.direction.x,
+                    ray.start.y + k * ray.direction.y,
+                    ray.start.z + k * ray.direction.z,
+                );
                 result.push(point);
             }
         }

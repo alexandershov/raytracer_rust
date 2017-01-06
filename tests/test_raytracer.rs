@@ -6,34 +6,35 @@ use std::f32;
 #[test]
 fn floor_color_at() {
     let floor = Floor::new(5.0);
-    let black_point = Point { x: 0.1, y: 0.1, z: 0.0 };
+    let black_point = Point::new(0.1, 0.1, 0.0);
     assert_eq!(floor.color_at(black_point), BLACK);
-    let white_point = Point { x: 5.1, y: 0.1, z: 0.0 };
+    let white_point = Point::new(5.1, 0.1, 0.0);
     assert_eq!(floor.color_at(white_point), WHITE);
 
-    let another_black_point = Point { x: 5.1, y: -0.1, z: 0.0 };
+    let another_black_point = Point::new(5.1, -0.1, 0.0);
     assert_eq!(floor.color_at(another_black_point), BLACK);
-    let another_white_point = Point { x: -5.1, y: -0.1, z: 0.0 };
+    let another_white_point = Point::new(-5.1, -0.1, 0.0);
     assert_eq!(floor.color_at(another_white_point), WHITE);
 }
 
 #[test]
 fn ray_plane_intersection() {
     let ray = Ray::new(
-        Point { x: -1.0, y: -1.0, z: -1.0 },
-        Point { x: 1.0, y: 1.0, z: 1.0 });
+        Point::new(-1.0, -1.0, -1.0),
+        Point::new(1.0, 1.0, 1.0),
+    );
     let plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let points = plane.get_intersections(ray);
     assert_eq!(1, points.len());
-    assert_eq!(points[0], Point { x: 0.0, y: 0.0, z: 0.0 })
+    assert_eq!(points[0], Point::new(0.0, 0.0, 0.0 ))
 }
 
 
 #[test]
 fn ray_plane_no_intersection() {
     let ray = Ray::new(
-        Point { x: 1.0, y: 1.0, z: 1.0 },
-        Point { x: 1.0, y: 1.0, z: 1.0 });
+        Point::new(1.0, 1.0, 1.0),
+        Point::new(1.0, 1.0, 1.0));
     let plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let points = plane.get_intersections(ray);
     assert_eq!(0, points.len());
@@ -41,8 +42,8 @@ fn ray_plane_no_intersection() {
 
 #[test]
 fn distance() {
-    let origin = Point { x: 0.0, y: 0.0, z: 0.0 };
-    let point = Point { x: 1.0, y: 3.0, z: 5.0 };
+    let origin = Point::new(0.0, 0.0, 0.0);
+    let point = Point::new(1.0, 3.0, 5.0);
     let distance = get_distance(origin, point);
     assert!(are_close(distance, (35.0 as f32).sqrt()));
 }
@@ -67,25 +68,25 @@ fn intensify_very_bright() {
 #[test]
 fn ray_sphere_intersection() {
     let ray = Ray::new(
-        Point { x: 0.0, y: 0.0, z: 0.0 },
-        Point { x: 1.0, y: 0.0, z: 0.0 });
+        Point::new(0.0, 0.0, 0.0),
+        Point::new(1.0, 0.0, 0.0));
     let sphere = raytracer::Sphere {
-        center: Point { x: 0.0, y: 0.0, z: 0.0 },
+        center: Point::new(0.0, 0.0, 0.0),
         radius: 1.0,
         color: BLACK,
     };
     let points = sphere.get_intersections(ray);
     assert_eq!(1, points.len());
-    assert!(raytracer::are_close_points(points[0], Point { x: 1.0, y: 0.0, z: 0.0 }));
+    assert!(raytracer::are_close_points(points[0], Point::new(1.0, 0.0, 0.0 )));
 }
 
 #[test]
 fn ray_sphere_no_intersection() {
     let ray = Ray::new(
-        Point { x: 0.0, y: 0.0, z: 0.0 },
-        Point { x: 1.0, y: 0.0, z: 0.0 });
+        Point::new(0.0, 0.0, 0.0),
+        Point::new(1.0, 0.0, 0.0));
     let sphere = raytracer::Sphere {
-        center: Point { x: 10.0, y: 10.0, z: 10.0 },
+        center: Point::new(10.0, 10.0, 10.0),
         radius: 1.0,
         color: WHITE,
     };
@@ -105,9 +106,9 @@ fn quadratic_equation() {
 
 #[test]
 fn get_closest_point() {
-    let point = Point { x: 0.0, y: 0.0, z: 0.0 };
-    let a = Point { x: 1.0, y: 1.0, z: 1.0 };
-    let b = Point { x: 2.0, y: 2.0, z: 2.0 };
+    let point = Point::new(0.0, 0.0, 0.0);
+    let a = Point::new(1.0, 1.0, 1.0);
+    let b = Point::new(2.0, 2.0, 2.0);
     match raytracer::get_closest_point(point, &vec![a, b]) {
         Some(actual_point) => assert_eq!(actual_point, a),
         None => assert!(false),
@@ -116,7 +117,7 @@ fn get_closest_point() {
 
 #[test]
 fn get_no_closest_point() {
-    let point = Point { x: 0.0, y: 0.0, z: 0.0 };
+    let point = Point::new(0.0, 0.0, 0.0);
     match raytracer::get_closest_point(point, &vec![]) {
         None => assert!(true),
         Some(_) => assert!(false),
@@ -127,14 +128,14 @@ fn get_no_closest_point() {
 fn pixel_color() {
     let green = raytracer::Color { r: 0, g: 150, b: 0 };
     let sphere = raytracer::Sphere {
-        center: Point { x: -90.0, y: 10.0, z: 10.0},
+        center: Point::new(-90.0, 10.0, 10.0),
         radius: 10.0,
         color: green,
     };
     let scene = raytracer::Scene {
         floor: raytracer::Floor::new(32.0),
-        light: raytracer::Point { x: -200.0, y: 10.0, z: 200.0 },
+        light: raytracer::Point::new(-200.0, 10.0, 200.0),
         spheres: vec![sphere],
-        eye: Point { x: 30.0, y: 30.0, z: 30.0 },
+        eye: Point::new(30.0, 30.0, 30.0),
     };
 }
