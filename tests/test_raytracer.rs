@@ -137,5 +137,7 @@ fn pixel_color() {
         light: raytracer::Point::new(-200.0, 10.0, 200.0),
         spheres: vec![sphere],
         eye: Point::new(30.0, 30.0, 30.0),
+        width: 256,
+        height: 256,
     };
 }
