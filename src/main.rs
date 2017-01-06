@@ -11,8 +11,6 @@ struct ColoredPoint {
     color: Color,
 }
 
-const SPHERE_COLOR: Color = Color { r: 0, g: 180, b: 0 };
-
 
 fn main() {
     let size = 800;
@@ -29,6 +27,7 @@ fn main() {
             z: 80.0,
         },
         radius: 80.0,
+        color: Color { r: 0, g: 180, b: 0 },
     };
     let floor = Floor::new(64.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
@@ -101,7 +100,7 @@ fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sp
     }
     match raytracer::get_closest_point(ray.start, &sphere_points) {
         Some(p) => {
-            let point = ColoredPoint { point: p, color: SPHERE_COLOR };
+            let point = ColoredPoint { point: p, color: sphere.color };
             if colored_points.len() != 0 {
                 if raytracer::get_distance(p, ray.start) < raytracer::get_distance(colored_points[0].point, ray.start) {
                     colored_points.pop();

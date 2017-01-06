@@ -35,6 +35,14 @@ impl Ray {
 pub struct Sphere {
     pub center: Point,
     pub radius: f32,
+    pub color: Color,
+}
+
+pub struct Scene {
+    pub floor: Floor,
+    pub light: Point,
+    pub spheres: Vec<Sphere>,
+    pub eye: Point,
 }
 
 impl Sphere {

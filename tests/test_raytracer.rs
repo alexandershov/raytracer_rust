@@ -72,6 +72,7 @@ fn ray_sphere_intersection() {
     let sphere = raytracer::Sphere {
         center: Point { x: 0.0, y: 0.0, z: 0.0 },
         radius: 1.0,
+        color: BLACK,
     };
     let points = sphere.get_intersections(ray);
     assert_eq!(1, points.len());
@@ -86,6 +87,7 @@ fn ray_sphere_no_intersection() {
     let sphere = raytracer::Sphere {
         center: Point { x: 10.0, y: 10.0, z: 10.0 },
         radius: 1.0,
+        color: WHITE,
     };
     let points = sphere.get_intersections(ray);
     assert_eq!(0, points.len());
@@ -119,4 +121,20 @@ fn get_no_closest_point() {
         None => assert!(true),
         Some(_) => assert!(false),
     }
+}
+
+#[test]
+fn pixel_color() {
+    let green = raytracer::Color { r: 0, g: 150, b: 0 };
+    let sphere = raytracer::Sphere {
+        center: Point { x: -90.0, y: 10.0, z: 10.0},
+        radius: 10.0,
+        color: green,
+    };
+    let scene = raytracer::Scene {
+        floor: raytracer::Floor::new(32.0),
+        light: raytracer::Point { x: -200.0, y: 10.0, z: 200.0 },
+        spheres: vec![sphere],
+        eye: Point { x: 30.0, y: 30.0, z: 30.0 },
+    };
 }
