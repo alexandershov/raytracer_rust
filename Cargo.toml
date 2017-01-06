@@ -5,3 +5,4 @@ authors = ["Alexander Ershov <vohsrea@gmail.com>"]
 
 [dependencies]
 bmp = "0.2.0"
+clap = "2.20.0"

@@ -1,4 +1,5 @@
 extern crate bmp;
+extern crate clap;
 extern crate raytracer;
 
 use bmp::{Image, Pixel};
@@ -73,7 +74,13 @@ fn main() {
             image.set_pixel(size - y - 1, size - z - 1, color_to_pixel(color));
         }
     }
-    image.save("/Users/aershov182/tmp/raytracer.bmp").expect("couldn't save image");
+    let matches = clap::App::new("raytracer")
+        .version("0.1.0")
+        .args_from_usage(
+            "<OUTPUT_PATH> 'output .bmp file path'"
+        ).get_matches();
+    let path = matches.value_of("OUTPUT_PATH").expect("bad args");
+    image.save(path).expect("couldn't save image");
 }
 
 fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sphere, ray: Ray,
