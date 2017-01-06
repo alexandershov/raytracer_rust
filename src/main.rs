@@ -10,8 +10,7 @@ struct ColoredPoint {
     color: Color,
 }
 
-const SPHERE_COLOR: Color = Color { r: 0, g: 180, b: 0};
-
+const SPHERE_COLOR: Color = Color { r: 0, g: 180, b: 0 };
 
 
 fn main() {
@@ -78,7 +77,7 @@ fn main() {
 }
 
 fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sphere, ray: Ray,
-        exclude_ray_start: bool) -> Vec<ColoredPoint> {
+                      exclude_ray_start: bool) -> Vec<ColoredPoint> {
     let mut floor_points = floor_plane.get_intersections(ray);
     let mut sphere_points = sphere.get_intersections(ray);
     if exclude_ray_start {
@@ -88,14 +87,14 @@ fn get_colored_points(floor: &Floor, floor_plane: &Plane, sphere: &raytracer::Sp
     let mut colored_points = vec![];
     match raytracer::get_closest_point(ray.start, &floor_points) {
         Some(p) => {
-            let point = ColoredPoint {point: p, color: floor.color_at(p)};
+            let point = ColoredPoint { point: p, color: floor.color_at(p) };
             colored_points.push(point);
         },
         _ => (),
     }
     match raytracer::get_closest_point(ray.start, &sphere_points) {
         Some(p) => {
-            let point = ColoredPoint {point: p, color: SPHERE_COLOR};
+            let point = ColoredPoint { point: p, color: SPHERE_COLOR };
             if colored_points.len() != 0 {
                 if raytracer::get_distance(p, ray.start) < raytracer::get_distance(colored_points[0].point, ray.start) {
                     colored_points.pop();
