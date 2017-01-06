@@ -27,7 +27,7 @@ fn main() {
             80.0,
         ),
         radius: 80.0,
-        color: Color { r: 0, g: 180, b: 0 },
+        color: Color::new(0, 180, 0),
     };
     let floor = Floor::new(64.0);
     let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
@@ -49,7 +49,7 @@ fn main() {
             let color;
             let colored_points = get_colored_points(&floor, &floor_plane, &sphere, ray, false);
             if colored_points.len() == 0 {
-                color = Color { r: 0, g: 0, b: 180 }
+                color = Color::new(0, 0, 180);
             } else {
                 let point = colored_points[0].point;
                 let simple_color = colored_points[0].color;

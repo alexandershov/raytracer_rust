@@ -26,6 +26,12 @@ pub struct Color {
     pub b: u8,
 }
 
+impl Color {
+    pub fn new(r: u8, g: u8, b: u8) -> Color {
+        Color { r: r, g: g, b: b }
+    }
+}
+
 #[derive(Clone, Copy)]
 pub struct Ray {
     pub start: Point,
@@ -56,7 +62,7 @@ pub struct Scene {
 
 impl Scene {
     pub fn color_at(&self, y: u32, z: u32) -> Color {
-        Color { r: 0, g: 0, b: 180 }
+        Color::new(0, 0, 180)
     }
 }
 

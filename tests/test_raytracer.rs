@@ -64,18 +64,18 @@ fn distance() {
 
 #[test]
 fn intensify() {
-    let color = Color { r: 100, g: 101, b: 102 };
+    let color = Color::new(100, 101, 102);
     let intensified = raytracer::intensify(color, 2.0);
-    let expected = Color { r: 200, g: 202, b: 204 };
+    let expected = Color::new(200, 202, 204);
     assert_eq!(intensified, expected);
 }
 
 
 #[test]
 fn intensify_very_bright() {
-    let color = Color { r: 100, g: 101, b: 102 };
+    let color = Color::new(100, 101, 102);
     let intensified = raytracer::intensify(color, 3.0);
-    let expected = Color { r: 255, g: 255, b: 255 };
+    let expected = Color::new(255, 255, 255);
     assert_eq!(intensified, expected);
 }
 
@@ -140,13 +140,13 @@ fn get_no_closest_point() {
 
 #[test]
 fn pixel_color() {
-    let green = raytracer::Color { r: 0, g: 150, b: 0 };
+    let green = raytracer::Color::new(0, 150, 0);
     let sphere = raytracer::Sphere {
         center: Point::new(-90.0, 10.0, 10.0),
         radius: 10.0,
         color: green,
     };
-    let sky = raytracer::Color { r: 0, g: 0, b: 180 };
+    let sky = raytracer::Color::new(0, 0, 180);
     let scene = raytracer::Scene {
         floor: raytracer::Floor::new(32.0),
         light: raytracer::Point::new(-200.0, 10.0, 200.0),
