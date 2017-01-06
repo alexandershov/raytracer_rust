@@ -79,7 +79,7 @@ fn main() {
         .args_from_usage(
             "<OUTPUT_PATH> 'output .bmp file path'"
         ).get_matches();
-    let path = matches.value_of("OUTPUT_PATH").expect("bad args");
+    let path = matches.value_of("OUTPUT_PATH").unwrap();
     image.save(path).expect("couldn't save image");
 }
 
