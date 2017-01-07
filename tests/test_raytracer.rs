@@ -158,13 +158,16 @@ fn screen_color() {
         height: 256,
     };
     assert_close_colors!(scene.color_at(255, 255), sky, 0.001);
-    // white floor,
-    // intersection = (28.965517241, 0, 0),
+    // white floor
+    // intersection = (28.965517241, 0, 0)
     // distance_to_light = 304.179565529
     // brightness = 3.287531818
     assert_close_colors!(scene.color_at(1, 1), raytracer::intensify(WHITE, 3.287531818), 0.001);
     // black floor
-    assert_close_colors!(scene.color_at(40, 1), BLACK, 0.001);
+    // intersection = (-1.034482759, 40.344827586, 0)
+    // distance_to_light = 283.7394678436589
+    // brightness = 3.524359891
+    assert_close_colors!(scene.color_at(40, 1), raytracer::intensify(BLACK, 3.524359891), 0.001);
     // sphere
     assert_close_colors!(scene.color_at(25, 25), scene.spheres[0].color, 0.001);
     // TODO: test shadow
