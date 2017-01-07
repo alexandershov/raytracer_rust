@@ -160,7 +160,7 @@ fn screen_color() {
     // brightness = 3.524359891
     assert_close_colors!(scene.color_at(40, 1), raytracer::intensify(BLACK, 3.524359891), 0.001);
     // green sphere
-    // intersection = (-80.266716, 11.622215, 11.622215)',
+    // intersection = (-80.266716, 11.622215, 11.622215)
     // distance_to_light = 223.2148757597421 * 3
     // brightness = 1.493329386
     assert_close_colors!(scene.color_at(25, 25), raytracer::intensify(scene.spheres[0].color, 1.493329386), 0.001);
