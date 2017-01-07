@@ -1,4 +1,5 @@
 use std::fmt;
+use std::ops::{Sub};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Point {
@@ -19,6 +20,14 @@ impl fmt::Display for Point {
     }
 }
 
+impl Sub for Point {
+    type Output = Point;
+
+    fn sub(self, other: Point) -> Point {
+        Point::new(self.x - other.x, self.y - other.y, self.z - other.z)
+    }
+}
+
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Color {
     pub r: u8,
@@ -36,6 +45,11 @@ impl fmt::Display for Color {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Color(r={}, g={}, b={})", self.r, self.g, self.b)
     }
+}
+
+pub struct ColoredPoint {
+    pub point: Point,
+    pub color: Color,
 }
 
 #[derive(Clone, Copy)]
@@ -68,7 +82,13 @@ pub struct Scene {
 
 impl Scene {
     pub fn color_at(&self, y: u32, z: u32) -> Color {
-        Color::new(0, 0, 180)
+        let point_at_screen = Point::new(0.0, y as f32, z as f32);
+        let ray = Ray::new(self.eye, point_at_screen - self.eye);
+        let points = self.floor.plane.get_intersections(ray);
+        for point in points {
+            return self.floor.color_at(point)
+        }
+        self.sky
     }
 }
 
@@ -132,11 +152,11 @@ pub const BLACK: Color = Color { r: 50, g: 50, b: 50 };
 const EPSILON: f32 = 0.001;
 
 
-#[derive(Debug)]
 pub struct Floor {
     step: f32,
     first_color: Color,
     second_color: Color,
+    plane: Plane,
 }
 
 impl Floor {
@@ -145,6 +165,7 @@ impl Floor {
             step: step,
             first_color: BLACK,
             second_color: WHITE,
+            plane: Plane { a: 0.0, b: 0.0, c: 1.0, d: 0.0 },
         }
     }
 

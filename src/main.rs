@@ -3,13 +3,10 @@ extern crate clap;
 extern crate raytracer;
 
 use bmp::{Image, Pixel};
-use raytracer::{Floor, Color, Point, Plane, Ray};
+use raytracer::{Floor, Color, Point, Plane, Ray, ColoredPoint};
 
 
-struct ColoredPoint {
-    point: Point,
-    color: Color,
-}
+
 
 
 fn main() {
