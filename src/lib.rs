@@ -137,6 +137,14 @@ impl Scene {
     pub fn color_at(&self, y: u32, z: u32) -> Color {
         let point_at_screen = Point::new(0.0, y as f32, z as f32);
         let ray = Ray::new(self.eye, point_at_screen - self.eye);
+        let points = self.get_all_colored_intersections(ray);
+        match get_closest_point(self.eye, &points) {
+            Some(point) => point.color,
+            None => self.sky_color,
+        }
+    }
+
+    fn get_all_colored_intersections(&self, ray: Ray) -> Vec<ColoredPoint> {
         let mut points: Vec<ColoredPoint> = vec![];
         for sphere in self.spheres.iter() {
             for point in sphere.get_colored_intersections(ray) {
@@ -147,10 +155,7 @@ impl Scene {
         for point in floor_points {
             points.push(point);
         }
-        match get_closest_point(self.eye, &points) {
-            Some(point) => point.color,
-            None => self.sky_color,
-        }
+        points
     }
 }
 
