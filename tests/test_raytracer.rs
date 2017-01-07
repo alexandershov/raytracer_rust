@@ -168,9 +168,11 @@ fn screen_color() {
     // distance_to_light = 283.7394678436589
     // brightness = 3.524359891
     assert_close_colors!(scene.color_at(40, 1), raytracer::intensify(BLACK, 3.524359891), 0.001);
-    // sphere
-    assert_close_colors!(scene.color_at(25, 25), scene.spheres[0].color, 0.001);
-    // TODO: test shadow
+    // green sphere
+    // intersection = (-80.266716, 11.622215, 11.622215)',
+    // distance_to_light = 223.2148757597421 * 3
+    // brightness = 1.493329386
+    assert_close_colors!(scene.color_at(25, 25), raytracer::intensify(scene.spheres[0].color, 1.493329386), 0.001);
 }
 
 fn distance_between_colors(first: Color, second: Color) -> f32 {
