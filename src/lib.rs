@@ -304,14 +304,14 @@ pub fn get_distance<S, T>(a: S, b: T) -> f32 where S: PointInSpace, T: PointInSp
 
 pub fn intensify(color: Color, brightness: f32) -> Color {
     Color {
-        r: mul_color_component(color.r, brightness),
-        g: mul_color_component(color.g, brightness),
-        b: mul_color_component(color.b, brightness),
+        r: multiply_color_component(color.r, brightness),
+        g: multiply_color_component(color.g, brightness),
+        b: multiply_color_component(color.b, brightness),
     }
 }
 
 
-fn mul_color_component(c: u8, brightness: f32) -> u8 {
+fn multiply_color_component(c: u8, brightness: f32) -> u8 {
     let r = ((c as f32) * brightness).min(255.0);
     r as u8
 }
@@ -320,7 +320,7 @@ pub fn get_brightness(distance_to_light: f32) -> f32 {
     1000.0 / distance_to_light
 }
 
-pub fn are_close_points<S: PointInSpace, T: PointInSpace>(a: T, b: S) -> bool {
+pub fn are_close_points<S, T>(a: T, b: S) -> bool where S: PointInSpace, T: PointInSpace {
     are_close(a.get_x(), b.get_x()) & are_close(a.get_y(), b.get_y()) & are_close(a.get_z(), b.get_z())
 }
 
