@@ -37,7 +37,7 @@ fn make_scene(size: u32) -> Scene {
         color: Color::new(0, 180, 0),
     };
     Scene {
-        floor: Floor::new(64.0),
+        floor: Floor::new(64.0, raytracer::BLACK, raytracer::WHITE),
         light: Point::new(
             -1000.0,
             (size / 2) as f32,

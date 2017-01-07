@@ -19,7 +19,7 @@ macro_rules! assert_close_colors {
 
 #[test]
 fn floor_color_at() {
-    let floor = Floor::new(5.0);
+    let floor = Floor::new(5.0, BLACK, WHITE);
     let black_point = Point::new(0.1, 0.1, 0.0);
     assert_eq!(floor.color_at(black_point), BLACK);
     let white_point = Point::new(5.1, 0.1, 0.0);
@@ -149,7 +149,7 @@ fn screen_color() {
     };
     let sky = raytracer::Color::new(0, 0, 180);
     let scene = raytracer::Scene {
-        floor: raytracer::Floor::new(32.0),
+        floor: raytracer::Floor::new(32.0, BLACK, WHITE),
         light: raytracer::Point::new(-200.0, 10.0, 200.0),
         sky_color: sky,
         spheres: vec![sphere],

@@ -187,12 +187,10 @@ fn exclude_close_points<S, T>(point: S, points: &Vec<T>) -> Vec<T> where S: Poin
 
 impl Sphere {
     pub fn get_intersections(&self, ray: Ray) -> Vec<Point> {
-        let x0 = ray.start.x - self.center.x;
-        let y0 = ray.start.y - self.center.y;
-        let z0 = ray.start.z - self.center.z;
+        let p = ray.start - self.center;
         let a = ray.direction.x.powi(2) + ray.direction.y.powi(2) + ray.direction.z.powi(2);
-        let b = 2.0 * (x0 * ray.direction.x + y0 * ray.direction.y + z0 * ray.direction.z);
-        let c = x0.powi(2) + y0.powi(2) + z0.powi(2) - self.radius.powi(2);
+        let b = 2.0 * (p.x * ray.direction.x + p.y * ray.direction.y + p.z * ray.direction.z);
+        let c = p.x.powi(2) + p.y.powi(2) + p.z.powi(2) - self.radius.powi(2);
         let roots = get_quadratic_equation_roots(a, b, c);
         let mut points = vec![];
         for root in roots {
@@ -262,11 +260,11 @@ pub struct Floor {
 }
 
 impl Floor {
-    pub fn new(step: f32) -> Floor {
+    pub fn new(step: f32, first_color: Color, second_color: Color) -> Floor {
         Floor {
             step: step,
-            first_color: BLACK,
-            second_color: WHITE,
+            first_color: first_color,
+            second_color: second_color,
             plane: Plane { a: 0.0, b: 0.0, c: 1.0, d: 0.0 },
         }
     }
