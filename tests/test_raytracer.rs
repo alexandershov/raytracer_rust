@@ -132,7 +132,8 @@ fn get_closest_point() {
 #[test]
 fn get_no_closest_point() {
     let point = Point::new(0.0, 0.0, 0.0);
-    match raytracer::get_closest_point(point, &vec![]) {
+    let no_points: Vec<Point> = vec![];
+    match raytracer::get_closest_point(point, &no_points) {
         None => assert!(true),
         Some(_) => assert!(false),
     }
@@ -157,11 +158,12 @@ fn pixel_color() {
         height: 256,
     };
     assert_close_colors!(scene.color_at(255, 255), sky, 0.001);
-    // sphere
     // white floor
     assert_close_colors!(scene.color_at(1, 1), WHITE, 0.001);
     // black floor
     assert_close_colors!(scene.color_at(40, 1), BLACK, 0.001);
+    // sphere
+    assert_close_colors!(scene.color_at(5, 5), scene.spheres[0].color, 0.001);
     // TODO: add lightning tests
 }
 

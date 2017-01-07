@@ -1,6 +1,24 @@
 use std::fmt;
 use std::ops::{Sub};
 
+
+pub trait PointInSpace: Copy {
+    fn get_x(&self) -> f32;
+    fn get_y(&self) -> f32;
+    fn get_z(&self) -> f32;
+}
+
+
+pub fn get_closest_point<T: PointInSpace, S: PointInSpace>(point: S, points: &Vec<T>) -> Option<T> {
+    let mut clone = points.clone();
+    clone.sort_by(|a, b| (&get_distance(*a, point)).partial_cmp(&get_distance(*b, point)).unwrap());
+    if clone.len() == 0 {
+        None
+    } else {
+        Some(clone[0])
+    }
+}
+
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Point {
     pub x: f32,
@@ -10,7 +28,21 @@ pub struct Point {
 
 impl Point {
     pub fn new(x: f32, y: f32, z: f32) -> Point {
-        Point { x: x, y: y, z: z}
+        Point { x: x, y: y, z: z }
+    }
+}
+
+impl PointInSpace for Point {
+    fn get_x(&self) -> f32 {
+        self.x
+    }
+
+    fn get_y(&self) -> f32 {
+        self.y
+    }
+
+    fn get_z(&self) -> f32 {
+        self.z
     }
 }
 
@@ -47,9 +79,30 @@ impl fmt::Display for Color {
     }
 }
 
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct ColoredPoint {
     pub point: Point,
     pub color: Color,
+}
+
+impl PointInSpace for ColoredPoint {
+    fn get_x(&self) -> f32 {
+        self.point.x
+    }
+
+    fn get_y(&self) -> f32 {
+        self.point.y
+    }
+
+    fn get_z(&self) -> f32 {
+        self.point.z
+    }
+}
+
+impl ColoredPoint {
+    pub fn new(point: Point, color: Color) -> ColoredPoint {
+        ColoredPoint { point: point, color: color }
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -84,11 +137,20 @@ impl Scene {
     pub fn color_at(&self, y: u32, z: u32) -> Color {
         let point_at_screen = Point::new(0.0, y as f32, z as f32);
         let ray = Ray::new(self.eye, point_at_screen - self.eye);
-        let points = self.floor.plane.get_intersections(ray);
-        for point in points {
-            return self.floor.color_at(point)
+        let mut points: Vec<ColoredPoint> = vec![];
+        for sphere in self.spheres.iter() {
+            for point in sphere.get_colored_intersections(ray) {
+                points.push(point);
+            }
         }
-        self.sky
+        let floor_points = self.floor.get_colored_intersections(ray);
+        for point in floor_points {
+            points.push(point);
+        }
+        match get_closest_point(self.eye, &points) {
+            Some(point) => point.color,
+            None => self.sky,
+        }
     }
 }
 
@@ -113,6 +175,15 @@ impl Sphere {
             }
         }
         return points;
+    }
+
+    pub fn get_colored_intersections(&self, ray: Ray) -> Vec<ColoredPoint> {
+        let mut points = vec![];
+        for point in self.get_intersections(ray) {
+            let colored_point = ColoredPoint::new(point, self.color);
+            points.push(colored_point);
+        }
+        points
     }
 }
 
@@ -169,6 +240,16 @@ impl Floor {
         }
     }
 
+    pub fn get_colored_intersections(&self, ray: Ray) -> Vec<ColoredPoint> {
+        let mut result = vec![];
+        for point in self.plane.get_intersections(ray) {
+            let color = self.color_at(point);
+            let colored_point = ColoredPoint::new(point, color);
+            result.push(colored_point);
+        }
+        result
+    }
+
     pub fn color_at(&self, point: Point) -> Color {
         if !are_close(point.z, 0.0) {
             panic!("{} is not close to 0.0", point.z);
@@ -187,8 +268,8 @@ pub fn are_close(a: f32, b: f32) -> bool {
     (a - b).abs() < EPSILON
 }
 
-pub fn get_distance(a: Point, b: Point) -> f32 {
-    let sum = (b.z - a.z).powi(2) + (b.y - a.y).powi(2) + (b.x - a.x).powi(2);
+pub fn get_distance<S: PointInSpace, T: PointInSpace>(a: S, b: T) -> f32 {
+    let sum = (b.get_z() - a.get_z()).powi(2) + (b.get_y() - a.get_y()).powi(2) + (b.get_x() - a.get_x()).powi(2);
     sum.sqrt()
 }
 
@@ -232,12 +313,3 @@ pub fn get_quadratic_equation_roots(a: f32, b: f32, c: f32) -> Vec<f32> {
     result
 }
 
-pub fn get_closest_point(point: Point, points: &Vec<Point>) -> Option<Point> {
-    let mut clone = points.clone();
-    clone.sort_by(|a, b| (&get_distance(*a, point)).partial_cmp(&get_distance(*b, point)).unwrap());
-    if clone.len() == 0 {
-        None
-    } else {
-        Some(clone[0])
-    }
-}
