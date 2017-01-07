@@ -297,7 +297,7 @@ pub fn are_close(a: f32, b: f32) -> bool {
     (a - b).abs() < EPSILON
 }
 
-pub fn get_distance<S: PointInSpace, T: PointInSpace>(a: S, b: T) -> f32 {
+pub fn get_distance<S, T>(a: S, b: T) -> f32 where S: PointInSpace, T: PointInSpace {
     let sum = (b.get_z() - a.get_z()).powi(2) + (b.get_y() - a.get_y()).powi(2) + (b.get_x() - a.get_x()).powi(2);
     sum.sqrt()
 }
