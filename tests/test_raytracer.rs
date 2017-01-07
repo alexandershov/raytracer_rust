@@ -163,7 +163,7 @@ fn pixel_color() {
     // black floor
     assert_close_colors!(scene.color_at(40, 1), BLACK, 0.001);
     // sphere
-    assert_close_colors!(scene.color_at(5, 5), scene.spheres[0].color, 0.001);
+    assert_close_colors!(scene.color_at(25, 25), scene.spheres[0].color, 0.001);
     // TODO: add lightning tests
 }
 
