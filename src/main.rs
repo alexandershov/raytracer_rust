@@ -3,18 +3,8 @@ extern crate clap;
 extern crate raytracer;
 
 use bmp::{Image, Pixel};
-use raytracer::{Floor, Color, Point, Plane, Ray, ColoredPoint, Sphere};
+use raytracer::{Floor, Color, Point};
 
-
-pub struct Scene {
-    pub floor: Floor,
-    pub light: Point,
-    pub sky_color: Color,
-    pub spheres: Vec<Sphere>,
-    pub eye: Point,
-    pub width: u32,
-    pub height: u32,
-}
 
 fn main() {
     let size = 800;
