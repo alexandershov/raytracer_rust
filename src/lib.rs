@@ -32,6 +32,12 @@ impl Color {
     }
 }
 
+impl fmt::Display for Color {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Color(r={}, g={}, b={})", self.r, self.g, self.b)
+    }
+}
+
 #[derive(Clone, Copy)]
 pub struct Ray {
     pub start: Point,

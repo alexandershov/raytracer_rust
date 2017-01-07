@@ -8,11 +8,11 @@ const COLOR_EPSILON: f32 = 1.0;
 
 macro_rules! assert_close_colors {
     ($color_a:expr, $color_b:expr) => {{
-        assert!(distance_between_colors($color_a, $color_b) < COLOR_EPSILON);
+        assert!(distance_between_colors($color_a, $color_b) < COLOR_EPSILON, "not close colors {}, {}", $color_a, $color_b);
     }};
 
     ($color_a:expr, $color_b:expr, $epsilon:expr) => {{
-        assert!(distance_between_colors($color_a, $color_b) < $epsilon);
+        assert!(distance_between_colors($color_a, $color_b) < $epsilon, "not close colors {}, {}", $color_a, $color_b);
     }};
 }
 
@@ -40,7 +40,7 @@ fn ray_plane_intersection() {
     let plane = Plane::new(0.0, 0.0, 1.0, 0.0);
     let points = plane.get_intersections(ray);
     assert_eq!(1, points.len());
-    assert_eq!(points[0], Point::new(0.0, 0.0, 0.0 ))
+    assert_eq!(points[0], Point::new(0.0, 0.0, 0.0))
 }
 
 
@@ -91,7 +91,7 @@ fn ray_sphere_intersection() {
     };
     let points = sphere.get_intersections(ray);
     assert_eq!(1, points.len());
-    assert!(raytracer::are_close_points(points[0], Point::new(1.0, 0.0, 0.0 )));
+    assert!(raytracer::are_close_points(points[0], Point::new(1.0, 0.0, 0.0)));
 }
 
 #[test]
@@ -156,11 +156,19 @@ fn pixel_color() {
         width: 256,
         height: 256,
     };
-    assert_close_colors!(scene.color_at(256, 256), sky, 0.001);
+    assert_close_colors!(scene.color_at(255, 255), sky, 0.001);
+    // sphere
+    // floor black
+    assert_close_colors!(scene.color_at(1, 1), WHITE, 0.001);
+    // white floor
+    // TODO: add lightning tests
 }
 
 fn distance_between_colors(first: Color, second: Color) -> f32 {
-    let sum_squares = ((first.r - second.r).pow(2) + (first.g - second.g).pow(2) + (first.b - second.b).pow(2)) as f32;
+    let sum_squares = (
+        (first.r as i32 - second.r as i32).pow(2) +
+            (first.g as i32 - second.g as i32).pow(2) +
+            (first.b as i32 - second.b as i32).pow(2)) as f32;
     sum_squares.sqrt()
 }
 
