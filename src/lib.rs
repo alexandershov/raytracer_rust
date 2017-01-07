@@ -9,7 +9,7 @@ pub trait PointInSpace: Copy {
 }
 
 
-pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: PointInSpace, S: PointInSpace{
+pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: PointInSpace, S: PointInSpace {
     let mut clone = points.clone();
     clone.sort_by(|a, b| (&get_distance(*a, point)).partial_cmp(&get_distance(*b, point)).unwrap());
     if clone.len() == 0 {
@@ -160,21 +160,22 @@ impl Scene {
     }
 
     fn get_all_colored_intersections(&self, ray: Ray) -> Vec<ColoredPoint> {
+        let mut points = self.floor.get_colored_intersections(ray);
+        points.extend(self.get_sphere_intersections(ray));
+        points
+    }
+
+    fn get_sphere_intersections(&self, ray: Ray) -> Vec<ColoredPoint> {
         let mut points = vec![];
-        for point in self.floor.get_colored_intersections(ray) {
-            points.push(point);
-        }
         for sphere in self.spheres.iter() {
-            for point in sphere.get_colored_intersections(ray) {
-                points.push(point);
-            }
+            points.extend(sphere.get_colored_intersections(ray));
         }
         points
     }
 }
 
 
-fn exclude_close_points<S: PointInSpace, T: PointInSpace>(point: S, points: &Vec<T>) -> Vec<T> {
+fn exclude_close_points<S, T>(point: S, points: &Vec<T>) -> Vec<T> where S: PointInSpace, T: PointInSpace {
     let mut result = vec![];
     for item in points {
         if !are_close_points(point, *item) {
