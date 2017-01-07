@@ -63,7 +63,7 @@ fn distance() {
 }
 
 #[test]
-fn intensify() {
+fn test_intensify() {
     let color = Color::new(100, 101, 102);
     let intensified = raytracer::intensify(color, 2.0);
     let expected = Color::new(200, 202, 204);
@@ -140,7 +140,7 @@ fn get_no_closest_point() {
 }
 
 #[test]
-fn pixel_color() {
+fn screen_color() {
     let green = raytracer::Color::new(0, 150, 0);
     let sphere = raytracer::Sphere {
         center: Point::new(-90.0, 10.0, 10.0),
@@ -158,13 +158,16 @@ fn pixel_color() {
         height: 256,
     };
     assert_close_colors!(scene.color_at(255, 255), sky, 0.001);
-    // white floor
-    assert_close_colors!(scene.color_at(1, 1), WHITE, 0.001);
+    // white floor,
+    // intersection = (28.965517241, 0, 0),
+    // distance_to_light = 304.179565529
+    // brightness = 3.287531818
+    assert_close_colors!(scene.color_at(1, 1), raytracer::intensify(WHITE, 3.287531818), 0.001);
     // black floor
     assert_close_colors!(scene.color_at(40, 1), BLACK, 0.001);
     // sphere
     assert_close_colors!(scene.color_at(25, 25), scene.spheres[0].color, 0.001);
-    // TODO: add lightning tests
+    // TODO: test shadow
 }
 
 fn distance_between_colors(first: Color, second: Color) -> f32 {
