@@ -151,7 +151,7 @@ fn pixel_color() {
     let scene = raytracer::Scene {
         floor: raytracer::Floor::new(32.0),
         light: raytracer::Point::new(-200.0, 10.0, 200.0),
-        sky: sky,
+        sky_color: sky,
         spheres: vec![sphere],
         eye: Point::new(30.0, 30.0, 30.0),
         width: 256,

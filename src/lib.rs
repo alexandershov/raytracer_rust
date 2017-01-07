@@ -126,7 +126,7 @@ pub struct Sphere {
 pub struct Scene {
     pub floor: Floor,
     pub light: Point,
-    pub sky: Color,
+    pub sky_color: Color,
     pub spheres: Vec<Sphere>,
     pub eye: Point,
     pub width: u32,
@@ -149,7 +149,7 @@ impl Scene {
         }
         match get_closest_point(self.eye, &points) {
             Some(point) => point.color,
-            None => self.sky,
+            None => self.sky_color,
         }
     }
 }
