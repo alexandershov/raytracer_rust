@@ -9,7 +9,7 @@ pub trait PointInSpace: Copy {
 }
 
 
-pub fn get_closest_point<T: PointInSpace, S: PointInSpace>(point: S, points: &Vec<T>) -> Option<T> {
+pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: PointInSpace, S: PointInSpace{
     let mut clone = points.clone();
     clone.sort_by(|a, b| (&get_distance(*a, point)).partial_cmp(&get_distance(*b, point)).unwrap());
     if clone.len() == 0 {
@@ -148,10 +148,11 @@ impl Scene {
         let ray_to_light = Ray::new(point.point, self.light - point.point);
         let points = self.get_all_colored_intersections(ray_to_light);
         let obstacle_point = get_closest_point(point, &exclude_close_points(point, &points));
-        let distance_to_light = match obstacle_point {
-            Some(_) => get_distance(self.light, point) * 3.0,
-            None => get_distance(self.light, point),
+        let coeff = match obstacle_point {
+            Some(_) => 3.0,  // shadow
+            None => 1.0,
         };
+        let distance_to_light = get_distance(point, self.light) * coeff;
         ColoredPoint::new(
             point.point,
             intensify(point.color, get_brightness(distance_to_light)),
@@ -159,15 +160,14 @@ impl Scene {
     }
 
     fn get_all_colored_intersections(&self, ray: Ray) -> Vec<ColoredPoint> {
-        let mut points: Vec<ColoredPoint> = vec![];
+        let mut points = vec![];
+        for point in self.floor.get_colored_intersections(ray) {
+            points.push(point);
+        }
         for sphere in self.spheres.iter() {
             for point in sphere.get_colored_intersections(ray) {
                 points.push(point);
             }
-        }
-        let floor_points = self.floor.get_colored_intersections(ray);
-        for point in floor_points {
-            points.push(point);
         }
         points
     }
