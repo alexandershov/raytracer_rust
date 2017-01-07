@@ -62,8 +62,6 @@ fn main() {
 }
 
 
-
-
 fn color_to_pixel(color: Color) -> Pixel {
     return Pixel {
         r: color.r,
