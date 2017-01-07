@@ -138,10 +138,26 @@ impl Scene {
         let point_at_screen = Point::new(0.0, y as f32, z as f32);
         let ray = Ray::new(self.eye, point_at_screen - self.eye);
         let points = self.get_all_colored_intersections(ray);
-        match get_closest_point(self.eye, &points) {
+        let closest_point = get_closest_point(self.eye, &points);
+        let lighted_point = closest_point.map(|p| self.apply_lightning(p));
+        match lighted_point {
             Some(point) => point.color,
             None => self.sky_color,
         }
+    }
+
+    fn apply_lightning(&self, point: ColoredPoint) -> ColoredPoint {
+        let ray_to_light = Ray::new(point.point, self.light - point.point);
+        let points = self.get_all_colored_intersections(ray_to_light);
+        let obstacle_point = get_closest_point(point, &exclude_close_points(point, &points));
+        let distance_to_light = match obstacle_point {
+            Some(_) => get_distance(self.light, point) * 3.0,
+            None => get_distance(self.light, point),
+        };
+        ColoredPoint::new(
+            point.point,
+            intensify(point.color, get_brightness(distance_to_light)),
+        )
     }
 
     fn get_all_colored_intersections(&self, ray: Ray) -> Vec<ColoredPoint> {
@@ -157,6 +173,17 @@ impl Scene {
         }
         points
     }
+}
+
+
+fn exclude_close_points<S: PointInSpace, T: PointInSpace>(point: S, points: &Vec<T>) -> Vec<T> {
+    let mut result = vec![];
+    for item in points {
+        if !are_close_points(point, *item) {
+            result.push(*item);
+        }
+    }
+    result
 }
 
 impl Sphere {
@@ -296,8 +323,8 @@ pub fn get_brightness(distance_to_light: f32) -> f32 {
     1000.0 / distance_to_light
 }
 
-pub fn are_close_points(a: Point, b: Point) -> bool {
-    are_close(a.x, b.x) & are_close(a.y, b.y) & are_close(a.z, b.z)
+pub fn are_close_points<S: PointInSpace, T: PointInSpace>(a: T, b: S) -> bool {
+    are_close(a.get_x(), b.get_x()) & are_close(a.get_y(), b.get_y()) & are_close(a.get_z(), b.get_z())
 }
 
 pub fn get_quadratic_equation_roots(a: f32, b: f32, c: f32) -> Vec<f32> {
