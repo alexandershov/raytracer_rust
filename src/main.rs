@@ -3,20 +3,21 @@ extern crate clap;
 extern crate raytracer;
 
 use bmp::{Image, Pixel};
-use raytracer::{Floor, Color, Point, Plane, Ray, ColoredPoint};
+use raytracer::{Floor, Color, Point, Plane, Ray, ColoredPoint, Sphere};
 
 
-
-
+pub struct Scene {
+    pub floor: Floor,
+    pub light: Point,
+    pub sky_color: Color,
+    pub spheres: Vec<Sphere>,
+    pub eye: Point,
+    pub width: u32,
+    pub height: u32,
+}
 
 fn main() {
     let size = 800;
-    let mut image = Image::new(size, size);
-    let light_source = Point::new(
-        -1000.0,
-        (size / 2) as f32,
-        (size / 2) as f32,
-    );
     let sphere = raytracer::Sphere {
         center: Point::new(
             -500.0,
@@ -26,48 +27,29 @@ fn main() {
         radius: 80.0,
         color: Color::new(0, 180, 0),
     };
-    let floor = Floor::new(64.0);
-    let floor_plane = Plane::new(0.0, 0.0, 1.0, 0.0);
-    let eye = Point::new(
-        (size / 2) as f32,
-        (size / 2) as f32,
-        (size / 2) as f32
-    );
+    let scene = raytracer::Scene {
+        floor: Floor::new(64.0),
+        light: Point::new(
+            -1000.0,
+            (size / 2) as f32,
+            (size / 2) as f32,
+        ),
+        sky_color: Color::new(0, 0, 180),
+        spheres: vec![sphere],
+        eye: Point::new(
+            (size / 2) as f32,
+            (size / 2) as f32,
+            (size / 2) as f32
+        ),
+        width: size,
+        height: size,
+    };
+    let mut image = Image::new(size, size);
+
     for y in 0..size {
         for z in 0..size {
-            let ray = Ray {
-                start: eye,
-                direction: Point::new(
-                    0.0 - eye.x,
-                    (y as f32) - eye.y,
-                    (z as f32) - eye.z,
-                ),
-            };
-            let color;
-            let colored_points = get_colored_points(&floor, &floor_plane, &sphere, ray, false);
-            if colored_points.len() == 0 {
-                color = Color::new(0, 0, 180);
-            } else {
-                let point = colored_points[0].point;
-                let simple_color = colored_points[0].color;
-                let ray_to_light = raytracer::Ray {
-                    start: point,
-                    direction: raytracer::Point::new(
-                        light_source.x - point.x,
-                        light_source.y - point.y,
-                        light_source.z - point.z,
-                    ),
-                };
-                let distance_to_light;
-                let points_to_light = get_colored_points(&floor, &floor_plane, &sphere, ray_to_light, true);
-                if points_to_light.len() != 0 {
-                    distance_to_light = raytracer::get_distance(point, light_source) * 3.0;
-                } else {
-                    distance_to_light = raytracer::get_distance(point, light_source);
-                }
-                color = raytracer::intensify(simple_color, raytracer::get_brightness(distance_to_light));
-            }
-            image.set_pixel(size - y - 1, size - z - 1, color_to_pixel(color));
+            let color = scene.color_at(y, z);
+            image.set_pixel(size - 1 - y, size - 1 - z, color_to_pixel(color));
         }
     }
     let matches = clap::App::new("raytracer")
