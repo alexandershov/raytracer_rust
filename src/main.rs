@@ -3,37 +3,12 @@ extern crate clap;
 extern crate raytracer;
 
 use bmp::{Image, Pixel};
-use raytracer::{Floor, Color, Point};
+use raytracer::{Scene, Sphere, Point, Color, Floor};
 
 
 fn main() {
     let size = 800;
-    let sphere = raytracer::Sphere {
-        center: Point::new(
-            -500.0,
-            (size / 3) as f32,
-            80.0,
-        ),
-        radius: 80.0,
-        color: Color::new(0, 180, 0),
-    };
-    let scene = raytracer::Scene {
-        floor: Floor::new(64.0),
-        light: Point::new(
-            -1000.0,
-            (size / 2) as f32,
-            (size / 2) as f32,
-        ),
-        sky_color: Color::new(0, 0, 180),
-        spheres: vec![sphere],
-        eye: Point::new(
-            (size / 2) as f32,
-            (size / 2) as f32,
-            (size / 2) as f32
-        ),
-        width: size,
-        height: size,
-    };
+    let scene = make_scene(size);
     let mut image = Image::new(size, size);
 
     for y in 0..size {
@@ -51,11 +26,34 @@ fn main() {
     image.save(path).expect("couldn't save image");
 }
 
+fn make_scene(size: u32) -> Scene {
+    let sphere = Sphere {
+        center: Point::new(
+            -500.0,
+            (size / 3) as f32,
+            80.0,
+        ),
+        radius: 80.0,
+        color: Color::new(0, 180, 0),
+    };
+    Scene {
+        floor: Floor::new(64.0),
+        light: Point::new(
+            -1000.0,
+            (size / 2) as f32,
+            (size / 2) as f32,
+        ),
+        sky_color: Color::new(0, 0, 180),
+        spheres: vec![sphere],
+        eye: Point::new(
+            (size / 2) as f32,
+            (size / 2) as f32,
+            (size / 2) as f32
+        ),
+    }
+}
+
 
 fn color_to_pixel(color: Color) -> Pixel {
-    return Pixel {
-        r: color.r,
-        g: color.g,
-        b: color.b,
-    }
+    return Pixel::new(color.r, color.g, color.b);
 }

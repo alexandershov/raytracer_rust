@@ -154,8 +154,6 @@ fn screen_color() {
         sky_color: sky,
         spheres: vec![sphere],
         eye: Point::new(30.0, 30.0, 30.0),
-        width: 256,
-        height: 256,
     };
     assert_close_colors!(scene.color_at(255, 255), sky, 0.001);
     // white floor

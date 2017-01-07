@@ -129,8 +129,6 @@ pub struct Scene {
     pub sky_color: Color,
     pub spheres: Vec<Sphere>,
     pub eye: Point,
-    pub width: u32,
-    pub height: u32,
 }
 
 impl Scene {
