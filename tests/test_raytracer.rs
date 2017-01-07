@@ -1,16 +1,9 @@
 extern crate raytracer;
 
-use raytracer::{BLACK, Floor, Point, WHITE, Plane, Ray, are_close, get_distance, Color};
+use raytracer::{Floor, Point, Plane, Ray, Sphere, Scene, Color, BLACK, WHITE};
 use std::f32;
 
-const COLOR_EPSILON: f32 = 1.0;
-
-
 macro_rules! assert_close_colors {
-    ($color_a:expr, $color_b:expr) => {{
-        assert!(distance_between_colors($color_a, $color_b) < COLOR_EPSILON, "not close colors {}, {}", $color_a, $color_b);
-    }};
-
     ($color_a:expr, $color_b:expr, $epsilon:expr) => {{
         assert!(distance_between_colors($color_a, $color_b) < $epsilon, "not close colors {}, {}", $color_a, $color_b);
     }};
@@ -58,8 +51,8 @@ fn ray_plane_no_intersection() {
 fn distance() {
     let origin = Point::new(0.0, 0.0, 0.0);
     let point = Point::new(1.0, 3.0, 5.0);
-    let distance = get_distance(origin, point);
-    assert!(are_close(distance, (35.0 as f32).sqrt()));
+    let distance = raytracer::get_distance(origin, point);
+    assert!(raytracer::are_close(distance, (35.0 as f32).sqrt()));
 }
 
 #[test]
@@ -84,7 +77,7 @@ fn ray_sphere_intersection() {
     let ray = Ray::new(
         Point::new(0.0, 0.0, 0.0),
         Point::new(1.0, 0.0, 0.0));
-    let sphere = raytracer::Sphere {
+    let sphere = Sphere {
         center: Point::new(0.0, 0.0, 0.0),
         radius: 1.0,
         color: BLACK,
@@ -99,7 +92,7 @@ fn ray_sphere_no_intersection() {
     let ray = Ray::new(
         Point::new(0.0, 0.0, 0.0),
         Point::new(1.0, 0.0, 0.0));
-    let sphere = raytracer::Sphere {
+    let sphere = Sphere {
         center: Point::new(10.0, 10.0, 10.0),
         radius: 1.0,
         color: WHITE,
@@ -141,16 +134,16 @@ fn get_no_closest_point() {
 
 #[test]
 fn screen_color() {
-    let green = raytracer::Color::new(0, 150, 0);
-    let sphere = raytracer::Sphere {
+    let green = Color::new(0, 150, 0);
+    let sphere = Sphere {
         center: Point::new(-90.0, 10.0, 10.0),
         radius: 10.0,
         color: green,
     };
-    let sky = raytracer::Color::new(0, 0, 180);
-    let scene = raytracer::Scene {
-        floor: raytracer::Floor::new(32.0, BLACK, WHITE),
-        light: raytracer::Point::new(-200.0, 10.0, 200.0),
+    let sky = Color::new(0, 0, 180);
+    let scene = Scene {
+        floor: Floor::new(32.0, BLACK, WHITE),
+        light: Point::new(-200.0, 10.0, 200.0),
         sky_color: sky,
         spheres: vec![sphere],
         eye: Point::new(30.0, 30.0, 30.0),
@@ -180,5 +173,3 @@ fn distance_between_colors(first: Color, second: Color) -> f32 {
             (first.b as i32 - second.b as i32).pow(2)) as f32;
     sum_squares.sqrt()
 }
-
-
