@@ -138,7 +138,7 @@ pub struct Scene {
 impl Scene {
     pub fn color_at(&self, y: u32, z: u32) -> Color {
         let point_at_screen = Point::new(0.0, y as f32, z as f32);
-        let ray = Ray::new(self.eye, point_at_screen - self.eye);
+        let ray = Ray::from_to(self.eye, point_at_screen);
         let points = self.get_all_colored_intersections(ray);
         let closest_point = get_closest_point(self.eye, &points);
         let lighted_point = closest_point.map(|p| self.apply_lightning(p));
@@ -149,7 +149,7 @@ impl Scene {
     }
 
     fn apply_lightning(&self, point: ColoredPoint) -> ColoredPoint {
-        let ray_to_light = Ray::new(point.point, self.light - point.point);
+        let ray_to_light = Ray::from_to(point.point, self.light);
         let points = self.get_all_colored_intersections(ray_to_light);
         let obstacle_point = get_closest_point(point, &exclude_close_points(point, &points));
         let coeff = match obstacle_point {
