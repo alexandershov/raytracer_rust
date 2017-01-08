@@ -154,7 +154,7 @@ fn screen_color() {
         spheres: vec![sphere],
         eye: Point::new(30.0, 30.0, 30.0),
     };
-//    assert_close_colors!(scene.color_at(255, 255), sky, 0.001);
+    assert_close_colors!(scene.color_at(255, 255), sky, 0.001);
     // white floor
     // intersection = (-1.034482759, 1.034482759, 0)
     // distance_to_light = 282.2545970402915
