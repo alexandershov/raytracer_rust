@@ -45,7 +45,7 @@ fn make_scene(size: u32) -> Scene {
         ),
         radius: 80.0,
         color: Color::new(180, 0, 0),
-        is_mirror: false,
+        is_mirror: true,
     };
     Scene {
         floor: Floor::new(64.0, raytracer::BLACK, raytracer::WHITE),

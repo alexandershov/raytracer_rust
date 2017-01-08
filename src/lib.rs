@@ -9,7 +9,7 @@ pub trait PointInSpace {
 }
 
 
-pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: PointInSpace+Copy, S: PointInSpace+Copy {
+pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: PointInSpace + Copy, S: PointInSpace + Copy {
     let mut clone = points.clone();
     clone.sort_by(|a, b| (&get_distance(*a, point)).partial_cmp(&get_distance(*b, point)).unwrap());
     if clone.len() == 0 {
@@ -142,6 +142,7 @@ impl Ray {
     }
 }
 
+#[derive(Clone, Copy)]
 pub struct Sphere {
     pub center: Point,
     pub radius: f64,
@@ -161,7 +162,7 @@ impl Scene {
     pub fn color_at(&self, y: u32, z: u32) -> Color {
         let point_at_screen = Point::new(0.0, y as f64, z as f64);
         let ray = Ray::from_to(self.eye, point_at_screen);
-        let points = self.get_all_colored_intersections(ray);
+        let points = self.get_all_colored_intersections(ray, true);
         let closest_point = get_closest_point(self.eye, &points);
         let lighted_point = closest_point.map(|p| self.apply_lightning(p));
         match lighted_point {
@@ -172,7 +173,7 @@ impl Scene {
 
     fn apply_lightning(&self, point: ColoredPoint) -> ColoredPoint {
         let ray_to_light = Ray::from_to(point.point, self.light_source);
-        let points = self.get_all_colored_intersections(ray_to_light);
+        let points = self.get_all_colored_intersections(ray_to_light, false);
         let obstacle_point = get_closest_point(point, &exclude_close_points(point, &points));
         let coeff = match obstacle_point {
             Some(_) => 3.0,  // shadow
@@ -185,9 +186,24 @@ impl Scene {
         )
     }
 
-    fn get_all_colored_intersections(&self, ray: Ray) -> Vec<ColoredPoint> {
-        let mut points = self.floor.get_colored_intersections(ray);
-        points.extend(self.get_sphere_intersections(ray));
+    fn get_all_colored_intersections(&self, ray: Ray, with_mirroring: bool) -> Vec<ColoredPoint> {
+        let mut cur_ray = ray;
+        let mut num_iter = 1;
+        if with_mirroring {
+            num_iter = 3;
+        }
+        let floor_points = get_closest_point(ray.start, &self.floor.get_colored_intersections(ray));
+        let sphere_points = get_closest_point(ray.start, &self.get_sphere_intersections(ray));
+        if floor_points.is_some() & !sphere_points.is_some() {
+            return vec![floor_points.unwrap()];
+        }
+        for _ in 1..(num_iter + 1) {
+            for sphere in self.spheres.iter() {
+                cur_ray = get_refraction_from_sphere(cur_ray, *sphere).unwrap_or(cur_ray);
+            }
+        }
+        let mut points = self.floor.get_colored_intersections(cur_ray);
+        points.extend(self.get_sphere_intersections(cur_ray));
         points
     }
 
@@ -200,7 +216,7 @@ impl Scene {
     }
 }
 
-fn exclude_close_points<S, T>(point: S, points: &Vec<T>) -> Vec<T> where S: PointInSpace+Copy, T: PointInSpace+Copy {
+fn exclude_close_points<S, T>(point: S, points: &Vec<T>) -> Vec<T> where S: PointInSpace + Copy, T: PointInSpace + Copy {
     let mut result = vec![];
     for item in points {
         if !are_close_points(point, *item) {
@@ -347,6 +363,8 @@ pub fn are_close_points<S, T>(a: T, b: S) -> bool where S: PointInSpace, T: Poin
 pub fn get_quadratic_equation_roots(a: f64, b: f64, c: f64) -> Vec<f64> {
     if a == 0.0 {
         if b == 0.0 {
+            // TODO: wtf?
+            return vec![];
             panic!("not an equation");
         }
         return vec![-c / b];
@@ -372,7 +390,7 @@ pub fn get_perpendicular_ray(point: Point, ray: Ray) -> Option<Ray> {
     if k < 0.0 {
         return None
     }
-//    panic!("intersection inter = {}, perp.start = {}, perp.direction = {}, k = {}", point, ray.start, ray.direction, k);
+    //    panic!("intersection inter = {}, perp.start = {}, perp.direction = {}, k = {}", point, ray.start, ray.direction, k);
     let point_on_ray = Point::new(
         ray.start.x + k * ray.direction.x,
         ray.start.y + k * ray.direction.y,
