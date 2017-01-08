@@ -344,3 +344,21 @@ pub fn get_quadratic_equation_roots(a: f64, b: f64, c: f64) -> Vec<f64> {
     result.push((-b - d_sqrt) / (2.0 * a));
     result
 }
+
+pub fn get_perpendicular_ray(point: Point, ray: Ray) -> Option<Ray> {
+    let numerator = (point.x - ray.start.x) * ray.direction.x + (point.y - ray.start.y) * ray.direction.y + (point.z - ray.start.z) * ray.direction.z;
+    let denominator = ray.direction.x.powi(2) + ray.direction.y.powi(2) + ray.direction.z.powi(2);
+    if are_close(denominator, 0.0) {
+        return None
+    }
+    let k = numerator / denominator;
+    if k < 0.0 {
+        return None
+    }
+    let point_on_ray = Point::new(
+        ray.start.x + k * ray.direction.x,
+        ray.start.y + k * ray.direction.y,
+        ray.start.z + k * ray.direction.z,
+    );
+    Some(Ray::from_to(point, point_on_ray))
+}

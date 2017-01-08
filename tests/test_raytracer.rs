@@ -172,7 +172,6 @@ fn screen_color() {
     assert_close_colors!(scene.color_at(25, 25), raytracer::intensify(scene.spheres[0].color, 1.493329386), 0.001);
 }
 
-
 #[test]
 fn ray_from_to() {
     let a = Point::new(1.0, 2.0, 3.0);
@@ -180,6 +179,15 @@ fn ray_from_to() {
     let ray = Ray::from_to(a, b);
     assert_eq!(ray.start, a);
     assert_close_points!(ray.direction, Point::new(3.0, -1.0, 5.0), 0.0001);
+}
+
+#[test]
+fn perpendicular_from_point() {
+    let point = Point::new(3.0, 2.0, 0.0);
+    let ray = Ray::from_to(Point::new(0.0, 0.0, 0.0), Point::new(1.0, 0.0, 0.0));
+    let perpendicular_ray = raytracer::get_perpendicular_ray(point, ray).unwrap();
+    assert_eq!(perpendicular_ray.start, point);
+    assert_close_points!(perpendicular_ray.direction, Point::new(0.0, -2.0, 0.0), 0.001);
 }
 
 fn distance_between_colors(first: Color, second: Color) -> f64 {
