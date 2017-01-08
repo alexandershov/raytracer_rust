@@ -388,6 +388,9 @@ pub fn get_refraction_from_sphere(ray: Ray, sphere: Sphere) -> Option<Ray> {
         return None
     }
     let point = closest_point.unwrap();
+    if !sphere.is_mirror {
+        return Some(Ray::from_to(ray.start, point));
+    }
     let perpendicular_ray = get_perpendicular_ray(ray.start, Ray::from_to(sphere.center, point));
     perpendicular_ray
         .map(|r| r.start + r.direction * 2.0)
