@@ -183,7 +183,6 @@ impl Scene {
     }
 }
 
-
 fn exclude_close_points<S, T>(point: S, points: &Vec<T>) -> Vec<T> where S: PointInSpace+Copy, T: PointInSpace+Copy {
     let mut result = vec![];
     for item in points {
@@ -345,4 +344,3 @@ pub fn get_quadratic_equation_roots(a: f64, b: f64, c: f64) -> Vec<f64> {
     result.push((-b - d_sqrt) / (2.0 * a));
     result
 }
-
