@@ -19,6 +19,11 @@ pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: 
     }
 }
 
+pub fn get_distance<S, T>(a: S, b: T) -> f64 where S: PointInSpace, T: PointInSpace {
+    let sum = (b.get_x() - a.get_x()).powi(2) + (b.get_y() - a.get_y()).powi(2) + (b.get_z() - a.get_z()).powi(2);
+    sum.sqrt()
+}
+
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Point {
     pub x: f64,
@@ -129,7 +134,7 @@ pub struct Sphere {
 
 pub struct Scene {
     pub floor: Floor,
-    pub light: Point,
+    pub light_source: Point,
     pub sky_color: Color,
     pub spheres: Vec<Sphere>,
     pub eye: Point,
@@ -149,14 +154,14 @@ impl Scene {
     }
 
     fn apply_lightning(&self, point: ColoredPoint) -> ColoredPoint {
-        let ray_to_light = Ray::from_to(point.point, self.light);
+        let ray_to_light = Ray::from_to(point.point, self.light_source);
         let points = self.get_all_colored_intersections(ray_to_light);
         let obstacle_point = get_closest_point(point, &exclude_close_points(point, &points));
         let coeff = match obstacle_point {
             Some(_) => 3.0,  // shadow
             None => 1.0,
         };
-        let distance_to_light = get_distance(point, self.light) * coeff;
+        let distance_to_light = get_distance(point, self.light_source) * coeff;
         ColoredPoint::new(
             point.point,
             intensify(point.color, get_brightness(distance_to_light)),
@@ -299,11 +304,6 @@ impl Floor {
 
 pub fn are_close(a: f64, b: f64) -> bool {
     (a - b).abs() < EPSILON
-}
-
-pub fn get_distance<S, T>(a: S, b: T) -> f64 where S: PointInSpace, T: PointInSpace {
-    let sum = (b.get_z() - a.get_z()).powi(2) + (b.get_y() - a.get_y()).powi(2) + (b.get_x() - a.get_x()).powi(2);
-    sum.sqrt()
 }
 
 pub fn intensify(color: Color, brightness: f64) -> Color {

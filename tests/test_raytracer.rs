@@ -149,7 +149,7 @@ fn screen_color() {
     let sky = Color::new(0, 0, 180);
     let scene = Scene {
         floor: Floor::new(32.0, BLACK, WHITE),
-        light: Point::new(-200.0, 10.0, 200.0),
+        light_source: Point::new(-200.0, 10.0, 200.0),
         sky_color: sky,
         spheres: vec![sphere],
         eye: Point::new(30.0, 30.0, 30.0),
