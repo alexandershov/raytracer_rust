@@ -35,6 +35,7 @@ fn make_scene(size: u32) -> Scene {
         ),
         radius: 80.0,
         color: Color::new(0, 180, 0),
+        is_mirror: false,
     };
     let sphere2 = Sphere {
         center: Point::new(
@@ -44,6 +45,7 @@ fn make_scene(size: u32) -> Scene {
         ),
         radius: 80.0,
         color: Color::new(180, 0, 0),
+        is_mirror: false,
     };
     Scene {
         floor: Floor::new(64.0, raytracer::BLACK, raytracer::WHITE),

@@ -87,6 +87,7 @@ fn ray_sphere_intersection() {
         center: Point::new(0.0, 0.0, 0.0),
         radius: 1.0,
         color: BLACK,
+        is_mirror: false,
     };
     let points = sphere.get_intersections(ray);
     assert_eq!(1, points.len());
@@ -102,6 +103,7 @@ fn ray_sphere_no_intersection() {
         center: Point::new(10.0, 10.0, 10.0),
         radius: 1.0,
         color: WHITE,
+        is_mirror: false,
     };
     let points = sphere.get_intersections(ray);
     assert_eq!(0, points.len());
@@ -145,6 +147,7 @@ fn screen_color() {
         center: Point::new(-90.0, 10.0, 10.0),
         radius: 10.0,
         color: green,
+        is_mirror: false,
     };
     let sky = Color::new(0, 0, 180);
     let scene = Scene {
@@ -188,6 +191,21 @@ fn perpendicular_from_point() {
     let perpendicular_ray = raytracer::get_perpendicular_ray(point, ray).unwrap();
     assert_eq!(perpendicular_ray.start, point);
     assert_close_points!(perpendicular_ray.direction, Point::new(0.0, -2.0, 0.0), 0.001);
+}
+
+#[test]
+fn sphere_mirroring() {
+    let sphere = Sphere {
+        center: Point::new(0.0, 0.0, 0.0),
+        radius: 1.0,
+        color: BLACK,
+        is_mirror: true,
+    };
+    let point = Point::new(10.0, 0.0, 0.0);
+    let ray = Ray::from_to(point, Point::new(1.0, 0.0, 0.0));
+    let refracted_ray = raytracer::get_refraction_from_sphere(ray, sphere).unwrap();
+    assert_close_points!(refracted_ray.start, Point::new(1.0, 0.0, 0.0), 0.001);
+    assert_close_points!(refracted_ray.direction, Point::new(9.0, 0.0, 0.0), 0.001);
 }
 
 fn distance_between_colors(first: Color, second: Color) -> f64 {

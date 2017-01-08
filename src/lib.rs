@@ -1,5 +1,5 @@
 use std::fmt;
-use std::ops::{Sub};
+use std::ops::{Add, Mul, Sub};
 
 
 pub trait PointInSpace {
@@ -62,6 +62,22 @@ impl Sub for Point {
 
     fn sub(self, other: Point) -> Point {
         Point::new(self.x - other.x, self.y - other.y, self.z - other.z)
+    }
+}
+
+impl Add for Point {
+    type Output = Point;
+
+    fn add(self, other: Point) -> Point {
+        Point::new(self.x + other.x, self.y + other.y, self.z + other.z)
+    }
+}
+
+impl Mul<f64> for Point {
+    type Output = Point;
+
+    fn mul(self, scale: f64) -> Point {
+        Point::new(self.x * scale, self.y * scale, self.z * scale)
     }
 }
 
@@ -130,6 +146,7 @@ pub struct Sphere {
     pub center: Point,
     pub radius: f64,
     pub color: Color,
+    pub is_mirror: bool,
 }
 
 pub struct Scene {
@@ -362,3 +379,17 @@ pub fn get_perpendicular_ray(point: Point, ray: Ray) -> Option<Ray> {
     );
     Some(Ray::from_to(point, point_on_ray))
 }
+
+pub fn get_refraction_from_sphere(ray: Ray, sphere: Sphere) -> Option<Ray> {
+    let intersections = sphere.get_intersections(ray);
+    let closest_point = get_closest_point(ray.start, &intersections);
+    if !closest_point.is_some() {
+        return None
+    }
+    let point = closest_point.unwrap();
+    let perpendicular_ray = get_perpendicular_ray(ray.start, Ray::from_to(sphere.center, point));
+    perpendicular_ray
+        .map(|r| r.start + (r.direction - r.start) * 2.0)
+        .map(|p| Ray::from_to(point, p))
+}
+
