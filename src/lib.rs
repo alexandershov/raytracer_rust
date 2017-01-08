@@ -115,6 +115,10 @@ impl Ray {
     pub fn new(start: Point, direction: Point) -> Ray {
         Ray { start: start, direction: direction }
     }
+
+    pub fn from_to(start: Point, end: Point) -> Ray {
+        Ray::new(start, end - start)
+    }
 }
 
 pub struct Sphere {

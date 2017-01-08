@@ -9,6 +9,13 @@ macro_rules! assert_close_colors {
     }};
 }
 
+macro_rules! assert_close_points {
+    ($point_a:expr, $point_b:expr, $epsilon:expr) => {{
+        assert!(raytracer::get_distance($point_a, $point_b) < $epsilon, "not close points {}, {}", $point_a, $point_b);
+    }};
+}
+
+
 
 #[test]
 fn floor_color_at() {
@@ -164,6 +171,16 @@ fn screen_color() {
     // distance_to_light = 223.2148757597421 * 3
     // brightness = 1.493329386
     assert_close_colors!(scene.color_at(25, 25), raytracer::intensify(scene.spheres[0].color, 1.493329386), 0.001);
+}
+
+
+#[test]
+fn ray_from_to() {
+    let a = Point::new(1.0, 2.0, 3.0);
+    let b = Point::new(4.0, 1.0, 8.0);
+    let ray = Ray::from_to(a, b);
+    assert_eq!(ray.start, a);
+    assert_close_points!(ray.direction, Point::new(3.0, -1.0, 5.0), 0.0001);
 }
 
 fn distance_between_colors(first: Color, second: Color) -> f32 {
