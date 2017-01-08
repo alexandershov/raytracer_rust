@@ -372,6 +372,7 @@ pub fn get_perpendicular_ray(point: Point, ray: Ray) -> Option<Ray> {
     if k < 0.0 {
         return None
     }
+//    panic!("intersection inter = {}, perp.start = {}, perp.direction = {}, k = {}", point, ray.start, ray.direction, k);
     let point_on_ray = Point::new(
         ray.start.x + k * ray.direction.x,
         ray.start.y + k * ray.direction.y,
@@ -389,7 +390,7 @@ pub fn get_refraction_from_sphere(ray: Ray, sphere: Sphere) -> Option<Ray> {
     let point = closest_point.unwrap();
     let perpendicular_ray = get_perpendicular_ray(ray.start, Ray::from_to(sphere.center, point));
     perpendicular_ray
-        .map(|r| r.start + (r.direction - r.start) * 2.0)
+        .map(|r| r.start + r.direction * 2.0)
         .map(|p| Ray::from_to(point, p))
 }
 
