@@ -2,14 +2,14 @@ use std::fmt;
 use std::ops::{Sub};
 
 
-pub trait PointInSpace: Copy {
+pub trait PointInSpace {
     fn get_x(&self) -> f32;
     fn get_y(&self) -> f32;
     fn get_z(&self) -> f32;
 }
 
 
-pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: PointInSpace, S: PointInSpace {
+pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: PointInSpace+Copy, S: PointInSpace+Copy {
     let mut clone = points.clone();
     clone.sort_by(|a, b| (&get_distance(*a, point)).partial_cmp(&get_distance(*b, point)).unwrap());
     if clone.len() == 0 {
@@ -179,7 +179,7 @@ impl Scene {
 }
 
 
-fn exclude_close_points<S, T>(point: S, points: &Vec<T>) -> Vec<T> where S: PointInSpace, T: PointInSpace {
+fn exclude_close_points<S, T>(point: S, points: &Vec<T>) -> Vec<T> where S: PointInSpace+Copy, T: PointInSpace+Copy {
     let mut result = vec![];
     for item in points {
         if !are_close_points(point, *item) {
