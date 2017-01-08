@@ -3,9 +3,9 @@ use std::ops::{Sub};
 
 
 pub trait PointInSpace {
-    fn get_x(&self) -> f32;
-    fn get_y(&self) -> f32;
-    fn get_z(&self) -> f32;
+    fn get_x(&self) -> f64;
+    fn get_y(&self) -> f64;
+    fn get_z(&self) -> f64;
 }
 
 
@@ -21,27 +21,27 @@ pub fn get_closest_point<T, S>(point: S, points: &Vec<T>) -> Option<T> where T: 
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Point {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 impl Point {
-    pub fn new(x: f32, y: f32, z: f32) -> Point {
+    pub fn new(x: f64, y: f64, z: f64) -> Point {
         Point { x: x, y: y, z: z }
     }
 }
 
 impl PointInSpace for Point {
-    fn get_x(&self) -> f32 {
+    fn get_x(&self) -> f64 {
         self.x
     }
 
-    fn get_y(&self) -> f32 {
+    fn get_y(&self) -> f64 {
         self.y
     }
 
-    fn get_z(&self) -> f32 {
+    fn get_z(&self) -> f64 {
         self.z
     }
 }
@@ -86,15 +86,15 @@ pub struct ColoredPoint {
 }
 
 impl PointInSpace for ColoredPoint {
-    fn get_x(&self) -> f32 {
+    fn get_x(&self) -> f64 {
         self.point.x
     }
 
-    fn get_y(&self) -> f32 {
+    fn get_y(&self) -> f64 {
         self.point.y
     }
 
-    fn get_z(&self) -> f32 {
+    fn get_z(&self) -> f64 {
         self.point.z
     }
 }
@@ -123,7 +123,7 @@ impl Ray {
 
 pub struct Sphere {
     pub center: Point,
-    pub radius: f32,
+    pub radius: f64,
     pub color: Color,
 }
 
@@ -137,7 +137,7 @@ pub struct Scene {
 
 impl Scene {
     pub fn color_at(&self, y: u32, z: u32) -> Color {
-        let point_at_screen = Point::new(0.0, y as f32, z as f32);
+        let point_at_screen = Point::new(0.0, y as f64, z as f64);
         let ray = Ray::from_to(self.eye, point_at_screen);
         let points = self.get_all_colored_intersections(ray);
         let closest_point = get_closest_point(self.eye, &points);
@@ -221,14 +221,14 @@ impl Sphere {
 }
 
 pub struct Plane {
-    a: f32,
-    b: f32,
-    c: f32,
-    d: f32,
+    a: f64,
+    b: f64,
+    c: f64,
+    d: f64,
 }
 
 impl Plane {
-    pub fn new(a: f32, b: f32, c: f32, d: f32) -> Plane {
+    pub fn new(a: f64, b: f64, c: f64, d: f64) -> Plane {
         Plane { a: a, b: b, c: c, d: d }
     }
 
@@ -253,18 +253,18 @@ impl Plane {
 
 pub const WHITE: Color = Color { r: 200, g: 200, b: 200 };
 pub const BLACK: Color = Color { r: 50, g: 50, b: 50 };
-const EPSILON: f32 = 0.001;
+const EPSILON: f64 = 0.001;
 
 
 pub struct Floor {
-    step: f32,
+    step: f64,
     first_color: Color,
     second_color: Color,
     plane: Plane,
 }
 
 impl Floor {
-    pub fn new(step: f32, first_color: Color, second_color: Color) -> Floor {
+    pub fn new(step: f64, first_color: Color, second_color: Color) -> Floor {
         Floor {
             step: step,
             first_color: first_color,
@@ -297,16 +297,16 @@ impl Floor {
     }
 }
 
-pub fn are_close(a: f32, b: f32) -> bool {
+pub fn are_close(a: f64, b: f64) -> bool {
     (a - b).abs() < EPSILON
 }
 
-pub fn get_distance<S, T>(a: S, b: T) -> f32 where S: PointInSpace, T: PointInSpace {
+pub fn get_distance<S, T>(a: S, b: T) -> f64 where S: PointInSpace, T: PointInSpace {
     let sum = (b.get_z() - a.get_z()).powi(2) + (b.get_y() - a.get_y()).powi(2) + (b.get_x() - a.get_x()).powi(2);
     sum.sqrt()
 }
 
-pub fn intensify(color: Color, brightness: f32) -> Color {
+pub fn intensify(color: Color, brightness: f64) -> Color {
     Color {
         r: multiply_color_component(color.r, brightness),
         g: multiply_color_component(color.g, brightness),
@@ -315,12 +315,12 @@ pub fn intensify(color: Color, brightness: f32) -> Color {
 }
 
 
-fn multiply_color_component(c: u8, brightness: f32) -> u8 {
-    let r = ((c as f32) * brightness).min(255.0);
+fn multiply_color_component(c: u8, brightness: f64) -> u8 {
+    let r = ((c as f64) * brightness).min(255.0);
     r as u8
 }
 
-pub fn get_brightness(distance_to_light: f32) -> f32 {
+pub fn get_brightness(distance_to_light: f64) -> f64 {
     1000.0 / distance_to_light
 }
 
@@ -328,7 +328,7 @@ pub fn are_close_points<S, T>(a: T, b: S) -> bool where S: PointInSpace, T: Poin
     are_close(a.get_x(), b.get_x()) & are_close(a.get_y(), b.get_y()) & are_close(a.get_z(), b.get_z())
 }
 
-pub fn get_quadratic_equation_roots(a: f32, b: f32, c: f32) -> Vec<f32> {
+pub fn get_quadratic_equation_roots(a: f64, b: f64, c: f64) -> Vec<f64> {
     if a == 0.0 {
         if b == 0.0 {
             panic!("not an equation");

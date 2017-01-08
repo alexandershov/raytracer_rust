@@ -30,7 +30,7 @@ fn make_scene(size: u32) -> Scene {
     let sphere1 = Sphere {
         center: Point::new(
             -500.0,
-            (size / 3) as f32,
+            (size / 3) as f64,
             80.0,
         ),
         radius: 80.0,
@@ -39,7 +39,7 @@ fn make_scene(size: u32) -> Scene {
     let sphere2 = Sphere {
         center: Point::new(
             -500.0,
-            (2 * size / 3) as f32,
+            (2 * size / 3) as f64,
             80.0,
         ),
         radius: 80.0,
@@ -49,15 +49,15 @@ fn make_scene(size: u32) -> Scene {
         floor: Floor::new(64.0, raytracer::BLACK, raytracer::WHITE),
         light: Point::new(
             -1000.0,
-            (size / 2) as f32,
-            (size / 2) as f32,
+            (size / 2) as f64,
+            (size / 2) as f64,
         ),
         sky_color: Color::new(0, 0, 180),
         spheres: vec![sphere1, sphere2],
         eye: Point::new(
-            (size / 2) as f32,
-            (size / 2) as f32,
-            (size / 2) as f32
+            (size / 2) as f64,
+            (size / 2) as f64,
+            (size / 2) as f64
         ),
     }
 }
